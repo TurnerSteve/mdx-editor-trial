@@ -1,0 +1,20 @@
+# Bridge Hands and Info
+
+Here is a heart suit symbol: {{suit:heart}}
+
+Multiple hands:
+
+- North: {{hand:AKQJ.T987.6543.2}}
+- East: {{hand:9876.5432.AKQJ.9}}
+- South: {{hand:5432.AKQJ.9876.T}}
+- West: {{hand:T987.6.5432.AKQJ}}
+
+Show bids below:
+
+{{bids:Pass 1♣ 2♦ 3NT}}
+
+A malformed command to test warnings: {{deal:}}
+
+Some inline text with an unknown command: {{foobar:123}}
+
+End of example.

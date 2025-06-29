@@ -1,0 +1,11 @@
+# Game Summary
+
+This is a **standard** markdown paragraph.
+
+Here’s a custom suit: {{suit:heart}}
+
+- List item 1
+- List item 2 {{bids:1♣ 1♦ 2♠ 3NT}}
+- List item 3
+
+{{deal:N:AKQJ.543.AKQ.42 E:T987.2.76.T9876 W:643.9876.JT98.KQ S:52.AKQJT.5432.3}}

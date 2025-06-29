@@ -1,0 +1,20 @@
+## Full Deal and Notes
+
+Full deal data:
+
+{{deal:N:AKQJ.T987.6543.2 E:9876.5432.AKQJ.9 S:5432.AKQJ.9876.T W:T987.6.5432.AKQJ}}
+
+Player notes:
+
+1. North has strong clubs.
+2. East signals with diamonds.
+3. South’s hand is balanced.
+4. West prefers spades.
+
+Some suits inline: ♠ {{suit:spade}}, ♥ {{suit:heart}}, ♦ {{suit:diamond}}, ♣ {{suit:club}}.
+
+Unknown command with empty value: {{bids:}}
+
+---
+
+End.

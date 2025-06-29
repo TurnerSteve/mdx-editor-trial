@@ -1,0 +1,19 @@
+# Edge Cases and Empty Inputs
+
+Empty suit command: {{suit:}}
+
+Empty hand command: {{hand:}}
+
+Empty bids command: {{bids:}}
+
+Empty deal command: {{deal:}}
+
+Broken command without type: {{:valueOnly}}
+
+Multiple commands in one line: {{suit:diamond}} text {{hand:KQJ}} and {{unknown:123}}
+
+Plain text continues here.
+
+- List with inline command {{bids:1NT Pass}}
+
+End.
