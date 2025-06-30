@@ -1,0 +1,96 @@
+/* src/lib/styles/prose.css */
+
+.prose {
+  max-width: 65ch;
+  line-height: 1.75;
+  font-size: 1rem;
+  color: #1f2937; /* gray-800 */
+}
+
+.prose h1 {
+  font-size: 2.25rem; /* text-4xl */
+  font-weight: 700;   /* font-bold */
+  margin-top: 2rem;   /* mt-8 */
+  margin-bottom: 1rem;/* mb-4 */
+}
+
+.prose h2 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 600;    /* font-semibold */
+  margin-top: 1.5rem;  /* mt-6 */
+  margin-bottom: 0.75rem; /* mb-3 */
+}
+
+.prose h3 {
+  font-size: 1.5rem;   /* text-2xl */
+  font-weight: 600;    /* font-semibold */
+  margin-top: 1rem;    /* mt-4 */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.prose p {
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.prose a {
+  color: #2563eb;      /* text-blue-600 */
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.prose a:hover {
+  color: #1e40af;      /* text-blue-800 */
+}
+
+.prose ul {
+  list-style-type: disc;   /* list-disc */
+  list-style-position: inside; /* list-inside */
+  margin-bottom: 1rem;     /* mb-4 */
+  padding-left: 1.25rem;   /* pl-5 */
+}
+
+.prose ol {
+  list-style-type: decimal; /* list-decimal */
+  list-style-position: inside; /* list-inside */
+  margin-bottom: 1rem;     /* mb-4 */
+  padding-left: 1.25rem;   /* pl-5 */
+}
+
+.prose blockquote {
+  border-left: 4px solid #d1d5db; /* border-l-4, gray-300 */
+  padding-left: 1rem;             /* pl-4 */
+  font-style: italic;             /* italic */
+  color: #4b5563;                 /* text-gray-600 */
+  margin-top: 1rem;               /* my-4 */
+  margin-bottom: 1rem;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* font-mono */
+  background-color: #f3f4f6; /* bg-gray-100 */
+  padding-left: 0.25rem;     /* px-1 */
+  padding-right: 0.25rem;
+  padding-top: 0.125rem;     /* py-0.5 */
+  padding-bottom: 0.125rem;
+  border-radius: 0.25rem;    /* rounded */
+  font-size: 0.875rem;       /* text-sm */
+}
+
+.prose pre {
+  background-color: #f3f4f6; /* bg-gray-100 */
+  padding: 1rem;             /* p-4 */
+  border-radius: 0.25rem;    /* rounded */
+  overflow-x: auto;          /* overflow-x-auto */
+  font-size: 0.875rem;       /* text-sm */
+}
+
+.prose img {
+  margin-top: 1rem;          /* my-4 */
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;    /* rounded */
+}
+
+.prose hr {
+  margin-top: 2rem;          /* my-8 */
+  margin-bottom: 2rem;
+  border-color: #d1d5db;     /* border-gray-300 */
+}

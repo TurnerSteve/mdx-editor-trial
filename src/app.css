@@ -1,7 +1,7 @@
 /* app.css */
-@import "tailwindcss/preflight";
 @import "tailwindcss";
 @import "tailwindcss/utilities";
+@import './lib/styles/prose.css';
 
 /* Optional: custom prose overrides */
 .prose :where(pre, code) {
