@@ -2,19 +2,19 @@
 	import { md } from './markdownParser';
 	import { hydrateCustomTags } from './hydrate';
 	import { onMount } from 'svelte';
+	import demoMd from '$lib/tests/Test0.svx?raw'
 
 	let containerEl: HTMLElement;
 
 	const state = $state({
-		markdown: `---
-		# Hello world\n\nThis is a suit: {{suit: heart}}\n\nAnd a deal:\n{{deal:N:AKQJ.543.AKQ.42 E:T987.2.76.T9876 W:643.9876.JT98.KQ S:52.AKQJT.5432.3}}`,
+		markdown: demoMd,
 		renderedHtml: ''
 	});
 
 	$effect(() => {
-		// console.log('Effect is running');
+		console.log('Effect is running');
 		const html = md.render(state.markdown);
-		// console.log('RENDERED HTML:', html);
+		console.log('RENDERED HTML:', html);
 		state.renderedHtml = html;
 	});
 
@@ -30,5 +30,7 @@
 ></textarea>
 
 <div bind:this={containerEl} class="prose mt-4 max-w-none">
+	<pre class="mt-2 overflow-auto bg-gray-100 p-2 text-xs">
+</pre>
 	{@html state.renderedHtml}
 </div>

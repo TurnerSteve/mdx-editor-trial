@@ -1,5 +1,6 @@
 /* app.css */
 @import "tailwindcss/preflight";
+@import "tailwindcss";
 @import "tailwindcss/utilities";
 
 /* Optional: custom prose overrides */
