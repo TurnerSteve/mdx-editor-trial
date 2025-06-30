@@ -1,3 +1,6 @@
 @import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
+
+/* Optional: custom prose overrides */
+.prose :where(pre, code) {
+  font-family: monospace;
+}
