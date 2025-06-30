@@ -1,15 +1,10 @@
 <!-- $lib/components/UnknownCommand.svelte -->
 
 <script lang="ts">
-  const { type }: { type: string } = $props();
+  export let type: string = '';
 </script>
 
-<span
-  class="font-mono text-red-600 cursor-help"
-  title="This command is not recognized by the renderer"
-  role="alert"
-  aria-live="assertive"
->
-  Unknown command: <strong>{type}</strong>
+<span class="text-red-600 font-mono cursor-help" title="Unrecognized command">
+  Unknown: <strong>{type}</strong>
 </span>
  

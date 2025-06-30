@@ -1,9 +1,8 @@
 import MarkdownIt from 'markdown-it';
-import { customSyntaxPlugin } from './customSyntaxPlugin';
+import { customSyntaxPlugin } from './customPlugin';
 
-const md = new MarkdownIt({ html: true });
-md.use(customSyntaxPlugin);
-
-export function parseMarkdownWithCustom(mdText: string) {
-  return md.parse(mdText, {});
-}
+export const md = new MarkdownIt({
+  html: true,
+  breaks: true,
+  linkify: true,
+}).use(customSyntaxPlugin);

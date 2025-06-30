@@ -1,0 +1,15 @@
+# Mixed Content Example
+
+- First item with a suit: {{suit:diamond}}
+- Second item with bids: {{bids:Pass 1♥ 2♣}}
+- Third item with unknown command: {{foo:bar}}
+
+Empty value deal (allowed):
+
+{{deal:}}
+
+Broken command (missing value):
+
+{{hand:}}
+
+Plain text after.

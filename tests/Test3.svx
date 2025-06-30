@@ -1,0 +1,12 @@
+Line with multiple suits: {{suit:heart}}{{suit:club}}{{suit:diamond}}{{suit:spade}}
+
+Invalid command with extra colon: {{suit::heart}}
+
+No command here, just text.
+
+Empty lines below:
+
+
+
+
+Last line with a hand: {{hand:QJ109}} and some trailing text.

@@ -1,16 +1,21 @@
-// $lib/types.ts (or wherever ParsedBlock is defined)
-export type ParsedBlock =
-  | {
-      kind: 'text';
-      content: string;
-      key: string;
-      line?: number;
-    }
-  | {
-      kind: 'component';
-      type: string;
-      value: string;
-      key: string;
-      line?: number;
-      raw: string;  // <-- add this!
-    };
+// src/lib/types.ts
+export type ParsedBlock = TextBlock | ComponentBlock;
+
+export type TextBlock = {
+	kind: 'text';
+	content: string;
+	key: string;
+	line?: number;
+};
+
+export type ComponentBlock = {
+	kind: 'component';
+	type: string;
+	value?: string;
+	key: string;
+	line?: number;
+};
+
+export type ComponentBlockProps = {
+	value?: string;
+};

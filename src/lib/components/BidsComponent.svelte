@@ -1,12 +1,8 @@
 <!-- $lib/components/BidsComponent.svelte -->
 <script lang="ts">
-  const { value = 'No bids provided' }: { value?: string } = $props();
+  export let value: string = '';
 </script>
 
-<span
-  class="italic text-gray-600"
-  role="region"
-  aria-label="Bids information"
->
-  <strong class="font-semibold text-black">Bids:</strong> {value || 'No bids provided'}
+<span class="text-sm italic text-gray-600">
+  <strong class="text-black font-semibold">Bids:</strong> {value || 'No bids'}
 </span>
