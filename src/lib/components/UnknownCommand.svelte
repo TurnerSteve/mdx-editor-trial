@@ -1,7 +1,7 @@
 <!-- $lib/components/UnknownCommand.svelte -->
 
 <script lang="ts">
-  export let type: string = '';
+   const { type } = $props();
 </script>
 
 <span class="text-red-600 font-mono cursor-help" title="Unrecognized command">

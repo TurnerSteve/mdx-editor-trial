@@ -1,6 +1,9 @@
-@import 'tailwindcss';
+/* app.css */
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
 
 /* Optional: custom prose overrides */
 .prose :where(pre, code) {
   font-family: monospace;
 }
+

@@ -1,6 +1,6 @@
 <!-- $lib/components/HandComponent.svelte -->
 <script lang="ts">
-  export let value: string = '';
+  const { value } = $props();
 </script>
 
 <div class="font-mono text-sm">

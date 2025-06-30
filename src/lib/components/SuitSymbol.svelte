@@ -1,7 +1,7 @@
 
 <!-- $lib/components/SuitSymbol.svelte -->
 <script lang="ts">
-  export let value: string = '';
+  const { value } = $props();
 
   const symbols = {
     heart: '♥',

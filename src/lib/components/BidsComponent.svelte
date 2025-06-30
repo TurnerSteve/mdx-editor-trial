@@ -1,6 +1,6 @@
 <!-- $lib/components/BidsComponent.svelte -->
 <script lang="ts">
-  export let value: string = '';
+   const { value } = $props();
 </script>
 
 <span class="text-sm italic text-gray-600">

@@ -7,7 +7,7 @@
 	import BidsComponent from '$lib/components/BidsComponent.svelte';
 	import UnknownCommand from '$lib/components/UnknownCommand.svelte';
 
-	export let blocks: ParsedBlock[];
+	const { blocks } = $props();
 
 	const componentMap = {
 		suit: SuitSymbol,

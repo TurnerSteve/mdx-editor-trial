@@ -7,7 +7,13 @@ const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
 	preprocess: [vitePreprocess(), mdsvex()],
-	kit: { adapter: adapter() },
+	compilerOptions: {
+		// For Svelte 5 runes mode (if available)
+		runes: true
+	},
+	kit: {
+		adapter: adapter()
+	},
 	extensions: ['.svelte', '.svx']
 };
 
