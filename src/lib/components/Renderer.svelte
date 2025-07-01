@@ -16,8 +16,17 @@
     bids: BidsComponent
   } as const;
 
-  function getProps(block: ParsedBlock) {
-    return { value: block.value ?? '' };
+  function isComponentBlock(
+    block: ParsedBlock
+  ): block is Extract<ParsedBlock, { kind: 'component'; value: string }> {
+    return block.kind === 'component';
+  }
+
+  function getComponentAndProps(block: ParsedBlock) {
+    if (block.kind !== 'component') return { Component: UnknownCommand, props: {} };
+
+    const Component = componentMap[block.type as keyof typeof componentMap] ?? UnknownCommand;
+    return { Component, props: { value: block.value ?? '' } };
   }
 </script>
 
@@ -27,8 +36,8 @@
       {#if block.kind === 'text'}
         <div>{block.content}</div>
       {:else}
-        {@const Component = componentMap[block.type as keyof typeof componentMap] ?? UnknownCommand}
-        <Component {...getProps(block)} />
+        {@const { Component, props } = getComponentAndProps(block)}
+        <Component {...(props as any)} />
       {/if}
     </div>
   {/each}

@@ -1,14 +1,14 @@
 <script lang="ts">
   import SuitSymbol from './SuitSymbol.svelte';
 
-  // Props destructured with runes mode
-  const { value }  = $props() ;
+  // Rename exported props object to avoid conflict with $props()
+  export const componentProps = /** @type { { value: string } } */ ({});
 
-  // Example: "AKQJ.543.AKQ.42"
-  // Split into suits order: Spades, Hearts, Diamonds, Clubs
+  // Now destructure the props safely
+  const { value } = $props();
+
   const suits = value.split('.');
 
-  // Defensive: if suits length is not 4, fill with empty strings
   while (suits.length < 4) suits.push('');
 
   const [spades, hearts, diamonds, clubs] = suits;
@@ -24,7 +24,7 @@
     <span>{hearts}</span>
   </div>
   <div class="suit-row flex items-center gap-1 text-red-500">
-    <SuitSymbol value={"d" as string} />
+    <SuitSymbol value="d" />
     <span>{diamonds}</span>
   </div>
   <div class="suit-row flex items-center gap-1">

@@ -2,7 +2,9 @@
   import HandComponent from './HandComponent.svelte';
   import type { Hand } from '$lib/types';
 
-  const { hands } = $props() as { hands: Record<'N' | 'E' | 'S' | 'W', Hand> };
+
+  export const componentProps = /** @type { { hands: Record<'N' | 'E' | 'S' | 'W', Hand> } } */ ({});
+  const { hands } = $props();
 
   // Typed directions array
   const directions: ('N' | 'E' | 'S' | 'W')[] = ['N', 'E', 'S', 'W'];

@@ -1,4 +1,3 @@
-
 <!-- $lib/components/SuitSymbol.svelte -->
 <script lang="ts">
 
