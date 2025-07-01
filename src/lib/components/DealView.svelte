@@ -1,31 +1,57 @@
 <script lang="ts">
-  import HandComponent from './HandComponent.svelte';
-  import type { Hand } from '$lib/types';
+	import HandComponent from './HandComponent.svelte';
+	import type { Hand } from '$lib/types';
 
-
-  export const componentProps = /** @type { { hands: Record<'N' | 'E' | 'S' | 'W', Hand> } } */ ({});
-  const { hands } = $props();
-
-  // Typed directions array
-  const directions: ('N' | 'E' | 'S' | 'W')[] = ['N', 'E', 'S', 'W'];
-
-  function dirLabel(dir: 'N' | 'E' | 'S' | 'W'): string {
-    switch (dir) {
-      case 'N': return 'North';
-      case 'E': return 'East';
-      case 'S': return 'South';
-      case 'W': return 'West';
-    }
-  }
+	const { hands } = $props() as {
+		hands: Record<'N' | 'E' | 'S' | 'W', Hand>;
+	};
 </script>
 
-<div class="deal-component grid grid-cols-2 gap-6 max-w-md mx-auto">
-  {#each directions as dir}
-    <div class="flex flex-col items-center">
-      <div class="font-bold mb-1">{dirLabel(dir)}</div>
-      <HandComponent
-        value={`${hands[dir].spades}.${hands[dir].hearts}.${hands[dir].diamonds}.${hands[dir].clubs}`}
-      />
-    </div>
-  {/each}
+<div
+	class="relative mx-auto min-h-[26rem] max-w-xl rounded-2xl border border-gray-300 bg-white p-4"
+>
+	<!-- North -->
+	<div class="absolute top-4 left-1/2 flex -translate-x-1/2 flex-col items-center">
+		<div class="mb-1 font-bold">North</div>
+		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
+			<HandComponent
+				value={`${hands.N.spades}.${hands.N.hearts}.${hands.N.diamonds}.${hands.N.clubs}`}
+			/>
+		</div>
+	</div>
+
+	<!-- South -->
+	<div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 flex-col items-center">
+		<div class="mb-1 font-bold">South</div>
+		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
+			<HandComponent
+				value={`${hands.S.spades}.${hands.S.hearts}.${hands.S.diamonds}.${hands.S.clubs}`}
+			/>
+		</div>
+	</div>
+
+	<!-- West -->
+	<div class="absolute top-1/2 left-4 flex -translate-y-1/2 flex-col items-center">
+		<div class="mb-1 font-bold">West</div>
+		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
+			<HandComponent
+				value={`${hands.W.spades}.${hands.W.hearts}.${hands.W.diamonds}.${hands.W.clubs}`}
+			/>
+		</div>
+	</div>
+
+	<!-- East -->
+	<div class="absolute top-1/2 right-4 flex -translate-y-1/2 flex-col items-center">
+		<div class="mb-1 font-bold">East</div>
+		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
+			<HandComponent
+				value={`${hands.E.spades}.${hands.E.hearts}.${hands.E.diamonds}.${hands.E.clubs}`}
+			/>
+		</div>
+	</div>
+
+	<!-- Center box with spacing -->
+	<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+		<div class="h-[7rem] w-[7rem]"></div>
+	</div>
 </div>
