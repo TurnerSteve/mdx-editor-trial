@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { md } from './markdownParser';
 	import { hydrateCustomTags } from './hydrate';
-	import demoMd from '$lib/tests/Test6.svx?raw';
+	import demoMd from '$lib/tests/Test5.svx?raw';
 	import { onMount, tick } from 'svelte';
 
 	let containerEl: HTMLElement;
@@ -11,56 +11,60 @@
 		renderedHtml: ''
 	});
 
+	let previousHtml = '';
+
 	$effect(() => {
 		const html = md.render(state.markdown);
 
-		state.renderedHtml = html;
-		// console.log('[RenderedHtml]', html);
+		if (html !== previousHtml) {
+			state.renderedHtml = html;
+			previousHtml = html;
+
+			queueMicrotask(() => {
+				hydrateCustomTags(containerEl);
+			});
+		}
 	});
 
-
-
-
-	onMount(async() => {
+	onMount(async () => {
 		await tick(); // wait for DOM to update
 		hydrateCustomTags(containerEl);
 	});
 </script>
 
-
-<div class="flex h-screen gap-6 p-6 bg-gray-50">
-  <!-- Markdown input -->
-  <textarea
-    bind:value={state.markdown}
-    rows="10"
-    class="
-      w-1/2 h-full
-      p-4
-      font-mono
-      border-2 border-gray-300
-      rounded-xl
-      focus:outline-none focus:ring-4 focus:ring-green-400 focus:border-green-600
-      transition
+<div class="flex h-screen gap-6 bg-gray-50 p-6">
+	<!-- Markdown input -->
+	<textarea
+		bind:value={state.markdown}
+		rows="10"
+		class="
+      h-full w-1/2
       resize-none
-      bg-white
-      shadow-sm
-    "
-  ></textarea>
-
-  <!-- Preview -->
-  <div
-    bind:this={containerEl}
-    class="
-      w-1/2 h-full
-      p-6
-      prose max-w-none
-      bg-white
-      border-2 border-gray-300
       rounded-xl
-      shadow-sm
-      overflow-auto
+      border-2 border-gray-300
+      bg-white
+      p-4 font-mono shadow-sm transition
+      focus:border-green-600
+      focus:ring-4
+      focus:ring-green-400
+      focus:outline-none
     "
-  >
-    {@html state.renderedHtml}
-  </div>
+	></textarea>
+
+	<!-- Preview -->
+	<div
+		bind:this={containerEl}
+		class="
+      prose h-full
+      w-1/2
+      max-w-none overflow-auto
+      rounded-xl
+      border-2 border-gray-300
+      bg-white
+      p-6
+      shadow-sm
+    "
+	>
+		{@html state.renderedHtml}
+	</div>
 </div>

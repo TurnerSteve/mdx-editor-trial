@@ -19,22 +19,23 @@ export function hydrateCustomTags(container: HTMLElement) {
 	if (!container) return;
 
 
-	console.log('[hydrate] container HTML:', container.innerHTML);
+	// console.log('[hydrate] container HTML:', container.innerHTML);
 
 	const elements = container.querySelectorAll<HTMLElement>('[data-component]');
 
-  console.log('[elements] ', elements);
-  console.log('[hydrate] Found', elements.length, 'custom elements');
+  // console.log('[hydrate] Found', elements.length, 'custom elements');
+  const mounted = new Set<string>();
 
 	elements.forEach((el) => {
+    const id = el.getAttribute('data-id');
+    if (id && mounted.has(id)) return;
+
 		const type = el.getAttribute('data-component');
-
 		if (!type) return;
-
 
 		const value = el.getAttribute('data-value') ?? '';
 
-    console.log('[hydrate]Hydrating:', {type, value} );
+    console.log('[hydrate]Hydrating:', {type, value, id} );
 
 		const Component = components[type];
 		if (Component) {
@@ -43,6 +44,7 @@ export function hydrateCustomTags(container: HTMLElement) {
 				target: el,
 				props: { value }
 			});
+      if (id) mounted.add(id);
 		} else {
 			// Fallback for unknown components
 			el.textContent = `Unknown command: ${type}`;

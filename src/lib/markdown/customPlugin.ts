@@ -19,7 +19,7 @@ export function customSyntaxPlugin(md: MarkdownIt) {
 		}
 		const content = src.slice(pos + 2, closeIndex).trim();
 		if (!silent) {
-			console.log('[plugin] Found custom tag:', content);
+			// console.log('[plugin] Found custom tag:', content);
 			const token = state.push('custom_tag', '', 0);
 			token.content = content;
 			token.markup = '{{}}';
@@ -33,9 +33,10 @@ export function customSyntaxPlugin(md: MarkdownIt) {
 		const content = tokens[idx].content;
 		const [type, ...rest] = content.split(':');
 		const value = rest.join(':').trim();
+    const id = `${type}:${value}`.replace(/\s+/g, '_');
 
-		console.log('[renderer] Rendering custom tag:', { type, value });
+		// console.log('[renderer] Rendering custom tag:', { type, value });
 
-		return `<span data-component="${type.toLowerCase()}" data-value="${value}"></span>`;
+		return `<span data-component="${type.toLowerCase()}" data-value="${value}" data-id="${id}"></span>`;
 	};
 }

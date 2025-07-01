@@ -18,7 +18,7 @@
   const symbol = symbols[lower as keyof typeof symbols] ?? '?';
   const color = ['h', 'heart', 'd', 'diamond'].includes(lower) ? 'text-red-500' : 'text-black';
 
-  console.log(`SuitSymbol: value=${value}, symbol=${symbol}, color=${color}`);
+  // console.log(`SuitSymbol: value=${value}, symbol=${symbol}, color=${color}`);
 </script>
 
 <span class={`text-lg ${color}`}>{symbol}</span>
