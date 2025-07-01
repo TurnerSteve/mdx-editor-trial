@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { md } from './markdownParser';
 	import { hydrateCustomTags } from './hydrate';
-	import demoMd from '$lib/tests/Test5.svx?raw';
+	import demoMd from '$lib/tests/Test6.svx?raw';
 	import { onMount, tick } from 'svelte';
 
 	let containerEl: HTMLElement;
