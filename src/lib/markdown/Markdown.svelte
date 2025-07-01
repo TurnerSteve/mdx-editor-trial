@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { md } from './markdownParser';
 	import { hydrateCustomTags } from './hydrate';
-	import { onMount } from 'svelte';
-	import demoMd from '$lib/tests/Test4.svx?raw';
+	import demoMd from '$lib/tests/Test6.svx?raw';
+	import { onMount, tick } from 'svelte';
 
 	let containerEl: HTMLElement;
 
@@ -13,11 +13,16 @@
 
 	$effect(() => {
 		const html = md.render(state.markdown);
+
 		state.renderedHtml = html;
-		console.log(state.renderedHtml);
+		// console.log('[RenderedHtml]', html);
 	});
 
-	onMount(() => {
+
+
+
+	onMount(async() => {
+		await tick(); // wait for DOM to update
 		hydrateCustomTags(containerEl);
 	});
 </script>

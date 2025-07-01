@@ -9,32 +9,43 @@ import BidsComponent from '$lib/components/BidsComponent.svelte';
 // Suppress the 'unexpected any' lint warning because Svelte 5 components don't have a stable class/type signature yet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const components: Record<string, any> = {
-  suit: SuitSymbol,
-  deal: DealComponent,
-  hand: HandComponent,
-  bids: BidsComponent
+	suit: SuitSymbol,
+	deal: DealComponent,
+	hand: HandComponent,
+	bids: BidsComponent
 };
 
 export function hydrateCustomTags(container: HTMLElement) {
-  if (!container) return;
+	if (!container) return;
 
-  const elements = container.querySelectorAll<HTMLElement>('[data-custom-tag]');
-  elements.forEach(el => {
-    const type = el.getAttribute('data-custom-tag');
-    if (!type) return;
 
-    const value = el.textContent ?? '';
-    el.textContent = '';
+	console.log('[hydrate] container HTML:', container.innerHTML);
 
-    const Component = components[type];
-    if (Component) {
-      mount(Component, {
-        target: el,
-        props: { value }
-      });
-    } else {
-      // Fallback for unknown components
-      el.textContent = `Unknown command: ${type}`;
-    }
-  });
+	const elements = container.querySelectorAll<HTMLElement>('[data-component]');
+
+  console.log('[elements] ', elements);
+  console.log('[hydrate] Found', elements.length, 'custom elements');
+
+	elements.forEach((el) => {
+		const type = el.getAttribute('data-component');
+
+		if (!type) return;
+
+
+		const value = el.getAttribute('data-value') ?? '';
+
+    console.log('[hydrate]Hydrating:', {type, value} );
+
+		const Component = components[type];
+		if (Component) {
+      el.textContent = ''; // Clear existing text content before mounting
+			mount(Component, {
+				target: el,
+				props: { value }
+			});
+		} else {
+			// Fallback for unknown components
+			el.textContent = `Unknown command: ${type}`;
+		}
+	});
 }

@@ -4,8 +4,8 @@ import { customSyntaxPlugin } from './customPlugin';
 
 const md = new MarkdownIt({
   html: false,
-  linkify: true,
-  typographer: true
+  breaks: true,
+  linkify: true
 }).use(customSyntaxPlugin); // 👈 your {{custom}} logic
 
 export default md;
