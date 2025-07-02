@@ -1,4 +1,13 @@
 // src/lib/types.ts
+export type Suit = 'S' | 'H' | 'D' | 'C';
+export type Direction = 'N' | 'E' | 'S' | 'W';
+
+export interface ParsedHand {
+  direction?: Direction;
+  cards: string;
+  suits: string[];
+}
+export type ParsedBid = string;
 export type ParsedBlock = TextBlock | ComponentBlock;
 
 export type TextBlock = {

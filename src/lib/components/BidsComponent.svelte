@@ -5,7 +5,8 @@
   const { value } = $props();
   const bids = parseBids(value ?? '');
 
-  const suitMap = {
+  type SuitKey = 'C' | 'D' | 'H' | 'S' | 'NT';
+  const suitMap: Record<SuitKey, { symbol: string; color: string }> = {
     C: { symbol: '♣', color: 'text-black' },
     D: { symbol: '♦', color: 'text-red-500' },
     H: { symbol: '♥', color: 'text-red-500' },
@@ -13,7 +14,7 @@
     NT: { symbol: 'NT', color: 'text-black' }
   };
 
-  const rows = [];
+  const rows: string[][] = [];
   for (let i = 0; i < bids.length; i += 4) {
     rows.push(bids.slice(i, i + 4));
   }
@@ -25,8 +26,7 @@
 
     const [_, number, suit] = match;
     if (suit) {
-      const key = suit.toUpperCase();
-      const { symbol, color } = suitMap[key] ?? { symbol: suit, color: 'text-black' };
+      const { symbol, color } = suitMap[suit.toUpperCase() as SuitKey] ?? { symbol: suit, color: 'text-black' };
       return number ? `${number} <span class="${color}">${symbol}</span>` : `<span class="${color}">${symbol}</span>`;
     }
 

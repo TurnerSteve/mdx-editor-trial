@@ -12,42 +12,34 @@
 >
 	<!-- North -->
 	<div class="absolute top-4 left-1/2 flex -translate-x-1/2 flex-col items-center">
-		<div class="mb-1 font-bold">North</div>
-		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
-			<HandComponent
-				value={`${hands.N.spades}.${hands.N.hearts}.${hands.N.diamonds}.${hands.N.clubs}`}
-			/>
-		</div>
+		<HandComponent
+			label="North"
+			value={`${hands.N.spades}.${hands.N.hearts}.${hands.N.diamonds}.${hands.N.clubs}`}
+		/>
 	</div>
 
 	<!-- South -->
 	<div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 flex-col items-center">
-		<div class="mb-1 font-bold">South</div>
-		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
-			<HandComponent
-				value={`${hands.S.spades}.${hands.S.hearts}.${hands.S.diamonds}.${hands.S.clubs}`}
-			/>
-		</div>
+		<HandComponent
+			label="South"
+			value={`${hands.S.spades}.${hands.S.hearts}.${hands.S.diamonds}.${hands.S.clubs}`}
+		/>
 	</div>
 
 	<!-- West -->
 	<div class="absolute top-1/2 left-4 flex -translate-y-1/2 flex-col items-center">
-		<div class="mb-1 font-bold">West</div>
-		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
-			<HandComponent
-				value={`${hands.W.spades}.${hands.W.hearts}.${hands.W.diamonds}.${hands.W.clubs}`}
-			/>
-		</div>
+		<HandComponent
+			label="West"
+			value={`${hands.W.spades}.${hands.W.hearts}.${hands.W.diamonds}.${hands.W.clubs}`}
+		/>
 	</div>
 
 	<!-- East -->
 	<div class="absolute top-1/2 right-4 flex -translate-y-1/2 flex-col items-center">
-		<div class="mb-1 font-bold">East</div>
-		<div class="rounded-xl border border-gray-300 bg-gray-50 p-2">
-			<HandComponent
-				value={`${hands.E.spades}.${hands.E.hearts}.${hands.E.diamonds}.${hands.E.clubs}`}
-			/>
-		</div>
+		<HandComponent
+			label="East"
+			value={`${hands.E.spades}.${hands.E.hearts}.${hands.E.diamonds}.${hands.E.clubs}`}
+		/>
 	</div>
 
 	<!-- Center box with spacing -->
