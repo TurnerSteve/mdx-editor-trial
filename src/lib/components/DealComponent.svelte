@@ -1,3 +1,4 @@
+<!-- $lib/components/DealComponent.svelte -->
 <script lang="ts">
   import DealView from './DealView.svelte';
   import type { Hand } from '$lib/types';

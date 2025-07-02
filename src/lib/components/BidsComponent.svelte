@@ -1,3 +1,4 @@
+<!-- $lib/components/DealComponent.svelte -->
 <script lang="ts">
   import { parseBids } from '$lib/components/shared/parseBids';
   import SuitSymbol from './SuitSymbol.svelte';

@@ -1,3 +1,4 @@
+<!-- $lib/components/DealView.svelte -->
 <script lang="ts">
 	import HandComponent from './HandComponent.svelte';
 	import type { Hand } from '$lib/types';

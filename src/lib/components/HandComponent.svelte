@@ -1,3 +1,4 @@
+<!-- $lib/components/HandComponent.svelte -->
 <script lang="ts">
 	import SuitSymbol from './SuitSymbol.svelte';
 	const { value, label } = $props() as { value: string; label?: string };
