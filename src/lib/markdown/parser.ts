@@ -1,5 +1,5 @@
 // src/lib/markdown/parser.ts
-import type { ParsedBlock } from '../types';
+import type { ParsedBlock } from '$lib/types';
 
 export function parseMarkdownText(mdText: string): ParsedBlock[] {
 	const blocks: ParsedBlock[] = [];

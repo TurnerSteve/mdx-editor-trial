@@ -1,15 +1,13 @@
-# Bridge Game Summary
-
-This is a standard markdown paragraph.
-
-Here’s a custom suit: {{suit:heart}} and {{suit:spade}}.
-
-Full deal example:
-
+# Example Bridge Markup
+{{suit: s}}{{suit: h}}{{suit: d}}{{suit: c}}
 {{deal:N:AKQJ.543.AKQ.42 E:T987.2.76.T9876 W:643.9876.JT98.KQ S:52.AKQJT.5432.3}}
+{{suit: s}}{{suit: h}}{{suit: d}}{{suit: c}}
+---
+{{suit:spade}}{{suit:heart}}{{suit:diamond}}{{suit:club}}
+{{suit:s}}{{suit:h}}{{suit:d}}{{suit:c}}
 
-A sample hand: {{hand:AKQJ}}
+---
+{{bids:- - - 1♣ 1♦ 2♠ 3NT P P P }}
 
-Bids sequence: {{bids:1♣ 1♦ 2♠ 3NT}}
-
-End of the line.
+{{hand:AKQJ.T987.6543.2}} {{hand:9876.5432.AKQJ.9}} 
+{{hand:5432.AKQJ.9876.T}} {{hand:T987.6.5432.AKQJ}}
