@@ -20,9 +20,10 @@ export type TextBlock = {
 export type ComponentBlock = {
 	kind: 'component';
 	type: string;
-	value?: string;
+	value: string;
 	key: string;
-	line?: number;
+	line: number;
+	[key: string]: unknown; // optional wildcard if supporting multiple arbitrary props
 };
 
 export type ComponentBlockProps = {

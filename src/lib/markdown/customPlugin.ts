@@ -19,7 +19,7 @@ export function customSyntaxPlugin(md: MarkdownIt) {
 		}
 		const content = src.slice(pos + 2, closeIndex).trim();
 		if (!silent) {
-			// console.log('[plugin] Found custom tag:', content);
+			console.log('[plugin] Found custom tag:', content);
 			const token = state.push('custom_tag', '', 0);
 			token.content = content;
 			token.markup = '{{}}';
@@ -31,12 +31,27 @@ export function customSyntaxPlugin(md: MarkdownIt) {
 
 	md.renderer.rules['custom_tag'] = (tokens, idx) => {
 		const content = tokens[idx].content;
+		// Extract type and rest
 		const [type, ...rest] = content.split(':');
-		const value = rest.join(':').trim();
-    const id = `${type}:${value}`.replace(/\s+/g, '_');
+		const restStr = rest.join(':').trim();
 
-		// console.log('[renderer] Rendering custom tag:', { type, value });
+		// Extract value and params (e.g. label=North)
+		const parts = restStr.split(/\s+/);
+		const value = parts[0];
+		const params = parts.slice(1);
 
-		return `<span data-component="${type.toLowerCase()}" data-value="${value}" data-id="${id}"></span>`;
+		// Convert params to data- attributes
+		let dataAttrs = `data-value="${value}" data-component="${type.toLowerCase()}"`;
+		for (const param of params) {
+			const [k, v] = param.split('=');
+			if (k && v) {
+				dataAttrs += ` data-${k}="${v}"`;
+			}
+		}
+
+		const id = `${type}:${value}`.replace(/\s+/g, '_');
+		dataAttrs += ` data-id="${id}"`;
+
+		return `<span ${dataAttrs}></span>`;
 	};
 }

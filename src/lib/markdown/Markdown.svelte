@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { md } from './markdownParser';
+	import { md }  from './markdownIt'
 	import { hydrateCustomTags } from './hydrate';
 	import demoMd from '$lib/tests/Test1.svx?raw';
 	import { onMount, tick } from 'svelte';
