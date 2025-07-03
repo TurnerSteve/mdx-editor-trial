@@ -1,60 +1,19 @@
-<!-- $lib/components/DealComponent.svelte -->
 <script lang="ts">
-  import { parseBids } from '$lib/components/shared/parseBids';
-  import SuitSymbol from './SuitSymbol.svelte';
+  const props = $props<{ value: string; label?: string }>();
 
-  const { value } = $props();
-  const bids = parseBids(value ?? '');
-
-  type SuitKey = 'C' | 'D' | 'H' | 'S' | 'NT';
-  const suitMap: Record<SuitKey, { symbol: string; color: string }> = {
-    C: { symbol: '♣', color: 'text-black' },
-    D: { symbol: '♦', color: 'text-red-500' },
-    H: { symbol: '♥', color: 'text-red-500' },
-    S: { symbol: '♠', color: 'text-black' },
-    NT: { symbol: 'NT', color: 'text-black' }
-  };
-
-  const rows: string[][] = [];
-  for (let i = 0; i < bids.length; i += 4) {
-    rows.push(bids.slice(i, i + 4));
-  }
-
-  function formatBid(bid: string) {
-    if (!bid) return '';
-    const match = bid.match(/^(\d+)?(NT|[CDHS])?$/i);
-    if (!match) return bid;
-
-    const [_, number, suit] = match;
-    if (suit) {
-      const { symbol, color } = suitMap[suit.toUpperCase() as SuitKey] ?? { symbol: suit, color: 'text-black' };
-      return number ? `${number} <span class="${color}">${symbol}</span>` : `<span class="${color}">${symbol}</span>`;
-    }
-
-    return bid;
-  }
+  const bids = $derived(() => {
+    return (props.value ?? '').trim().split(/\s+/);
+  });
 </script>
 
-<div class="border rounded-lg bg-gray-50 m-4 ml-6  w-80 overflow-hidden">
-  <table class="table-fixed w-80">
-    <thead class="bg-gray-500 text-white rounded-t-lg">
-      <tr>
-        <th class="w-20 text-left p-2 rounded-tl-lg" style="min-width: 4ch;">West</th>
-        <th class="w-20 text-left p-2" style="min-width: 4ch;">North</th>
-        <th class="w-20 text-left p-2" style="min-width: 4ch;">East</th>
-        <th class="w-20 text-left p-2 rounded-tr-lg" style="min-width: 4ch;">South</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each rows as row}
-        <tr class="even:bg-white odd:bg-gray-100">
-          {#each row as bid}
-            <td class="w-10 text-left p-2 align-middle" style="min-width: 4ch;">
-              {@html formatBid(bid)}
-            </td>
-          {/each}
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+<div class="border rounded p-3 bg-white shadow w-64">
+  {#if props.label}
+    <div class="font-semibold mb-2">{props.label}</div>
+  {/if}
+
+  <div class="font-mono text-lg flex flex-wrap gap-2">
+    {#each bids() as bid}
+      <span class="px-2 py-1 rounded bg-gray-200">{bid}</span>
+    {/each}
+  </div>
 </div>

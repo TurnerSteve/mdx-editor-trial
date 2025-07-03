@@ -1,22 +1,23 @@
-<!-- $lib/components/SuitSymbol.svelte -->
 <script lang="ts">
+  const props = $props<{ value: 's' | 'h' | 'd' | 'c' }>();
 
- const { value }  = $props() ;
+  const suit = $derived(() => {
+    const map = {
+      s: { symbol: '♠', colorClass: 'text-black', name: 'Spades' },
+      h: { symbol: '♥', colorClass: 'text-red-600', name: 'Hearts' },
+      d: { symbol: '♦', colorClass: 'text-red-600', name: 'Diamonds' },
+      c: { symbol: '♣', colorClass: 'text-black', name: 'Clubs' }
+    } as const;
 
-  const symbols = {
-    h: '♥',
-    heart: '♥',
-    d: '♦',
-    diamond: '♦',
-    c: '♣',
-    club: '♣',
-    s: '♠',
-    spade: '♠'
-  };
-
-  const lower = value.toLowerCase();
-  const symbol = symbols[lower as keyof typeof symbols] ?? '?';
-  const color = ['h', 'heart', 'd', 'diamond'].includes(lower) ? 'text-red-500' : 'text-black';
+    // Assert that the key is valid
+    return map[props.value as keyof typeof map];
+  });
 </script>
 
-<span class={`text-lg ${color}`} aria-label={value}>{symbol}</span>
+<span
+  aria-label={suit().name}
+  title={suit().name}
+  class={`font-semibold ${suit().colorClass}`}
+>
+  {suit().symbol}
+</span>

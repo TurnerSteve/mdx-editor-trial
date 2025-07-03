@@ -1,4 +1,6 @@
-import type { ParsedBlock } from '../types';
+import type { ParsedBlock, KnownComponentType } from '$lib/types';
+
+const knownTypes = new Set<KnownComponentType>(['hand', 'deal', 'bids']);
 
 export function parseMarkdownTokens(mdText: string): ParsedBlock[] {
   const blocks: ParsedBlock[] = [];
@@ -14,63 +16,66 @@ export function parseMarkdownTokens(mdText: string): ParsedBlock[] {
     for (const match of matches) {
       const before = line.slice(lastIndex, match.index);
       if (before) {
-        blocks.push({ kind: 'text', content: before, key: `text-${key++}`, line: lineNumber });
+        blocks.push({
+          kind: 'text',
+          content: before,
+          key: `text-${key++}`,
+          line: lineNumber
+        });
       }
 
       const raw = match[1].trim();
 
-      // Match type:value at start (greedy until first space or end)
-      const typeValueMatch = raw.match(/^([^\s]+)(?:\s+(.*))?$/);
-      if (!typeValueMatch) {
-        // fallback, treat whole as type, no value
+      // Split on first colon to get type and rest
+      const colonIndex = raw.indexOf(':');
+      let type: string;
+      let restStr = '';
+      if (colonIndex >= 0) {
+        type = raw.slice(0, colonIndex).toLowerCase();
+        restStr = raw.slice(colonIndex + 1).trim();
+      } else {
+        type = raw.toLowerCase();
+      }
+
+      // If not a known type, treat entire tag as text
+      if (!knownTypes.has(type as KnownComponentType)) {
         blocks.push({
-          kind: 'component',
-          type: raw.toLowerCase(),
-          value: '',
-          key: `component-${key++}`,
+          kind: 'text',
+          content: match[0],
+          key: `text-${key++}`,
           line: lineNumber,
         });
         lastIndex = (match.index ?? 0) + match[0].length;
         continue;
       }
 
-      const typeAndValue = typeValueMatch[1]; // like "hand:AKQJ.543.AKQ.42"
-      const paramStr = typeValueMatch[2]; // like "label=North"
+      // Split restStr on ';' or ',' or whitespace for params
+      // Here we'll support 'key:value' or 'key=value' pairs, or just positional value as first token
 
-      // Split type and value on first colon:
-      const colonIndex = typeAndValue.indexOf(':');
-      let type = '';
-      let value = '';
-      if (colonIndex >= 0) {
-        type = typeAndValue.slice(0, colonIndex).toLowerCase();
-        value = typeAndValue.slice(colonIndex + 1);
-      } else {
-        type = typeAndValue.toLowerCase();
-        value = '';
-      }
-
-      // Parse key=value parameters if paramStr exists
       const params: Record<string, string> = {};
-      if (paramStr) {
-        const parts = paramStr.trim().split(/\s+/);
-        for (const part of parts) {
-          const [k, v] = part.split('=');
-          if (k && v) params[k] = v;
+      let value = '';
+      if (restStr) {
+        const parts = restStr.split(/[,;]\s*|\s+/).filter(Boolean);
+        if (parts.length > 0) {
+          value = parts[0];
+          for (let i = 1; i < parts.length; i++) {
+            const [k, v] = parts[i].split(/[:=]/);
+            if (k && v) params[k.trim()] = v.trim();
+          }
         }
       }
 
       blocks.push({
         kind: 'component',
-        type,
+        type: type as KnownComponentType,
         value,
         key: `component-${key++}`,
         line: lineNumber,
+        label: params.label,
         ...params,
       });
 
-      console.log(`[parse Tokens]: type=${type}, value="${value}", params=${JSON.stringify(params)}`);
-      
-	  lastIndex = (match.index ?? 0) + match[0].length;
+      lastIndex = (match.index ?? 0) + match[0].length;
     }
 
     const after = line.slice(lastIndex);

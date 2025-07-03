@@ -1,4 +1,3 @@
-// src/lib/markdown/hydrate.ts
 import { mount } from 'svelte';
 
 import SuitSymbol from '$lib/components/SuitSymbol.svelte';
@@ -6,10 +5,15 @@ import DealComponent from '$lib/components/DealComponent.svelte';
 import HandComponent from '$lib/components/HandComponent.svelte';
 import BidsComponent from '$lib/components/BidsComponent.svelte';
 
-// Loosely type component class constructors to accept any props
-// Use `any` for component constructors to bypass the typing headaches here
-
 import type { SvelteComponent } from 'svelte';
+
+/**
+ * Map component types to Svelte components.
+ * To add new components:
+ * - Import your component here
+ * - Add to this map with the matching `type` key
+ * - Ensure your component accepts `label` and `value` (or `data`) as props
+ */
 const components: Record<string, typeof SvelteComponent> = {
   suit: SuitSymbol as unknown as typeof SvelteComponent,
   deal: DealComponent as unknown as typeof SvelteComponent,
@@ -17,10 +21,16 @@ const components: Record<string, typeof SvelteComponent> = {
   bids: BidsComponent as unknown as typeof SvelteComponent,
 };
 
+/**
+ * Hydrates all custom tags within a container element by
+ * mounting the appropriate Svelte component.
+ * 
+ * Looks for elements with `[data-component]` attribute,
+ * reads their data attributes (label, value, etc.),
+ * and mounts the Svelte component.
+ */
 export function hydrateCustomTags(container: HTMLElement) {
   if (!container) return;
-
-  console.log('[hydrate] container HTML:', container.innerHTML);
 
   const elements = container.querySelectorAll<HTMLElement>('[data-component]');
   const mounted = new Set<string>();
@@ -32,24 +42,22 @@ export function hydrateCustomTags(container: HTMLElement) {
     const type = el.getAttribute('data-component');
     if (!type) return;
 
-    // Collect all data-* attributes except data-component
+    // Extract props from all data- attributes except data-component
     const props: Record<string, string> = {};
     for (const attr of el.attributes) {
       if (attr.name.startsWith('data-') && attr.name !== 'data-component') {
-        // convert data-label to label, data-value to value etc.
-        const propName = attr.name.slice(5);
+        const propName = attr.name.slice(5); // Remove "data-" prefix
         props[propName] = attr.value;
       }
     }
 
-    console.log('[hydrate] Mounting', type, 'with props', props);
-
     const Component = components[type];
     if (Component) {
-      el.textContent = ''; // Clear existing content before mounting
+      // Clear existing content before mounting
+      el.textContent = '';
       mount(Component, {
         target: el,
-        props
+        props,
       });
       if (id) mounted.add(id);
     } else {
