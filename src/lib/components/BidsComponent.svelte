@@ -1,19 +1,24 @@
 <script lang="ts">
-  const props = $props<{ value: string; label?: string }>();
+  const props = $props<{ seq: string; label: string }>();
 
-  const bids = $derived(() => {
-    return (props.value ?? '').trim().split(/\s+/);
-  });
+  // Use derived for reactive bids array
+  let bids = $derived(() => (props.seq ?? '').trim().split(/\s+/).filter(Boolean));
+
+  console.log('[Bid Sequence]', props.seq)
 </script>
 
-<div class="border rounded p-3 bg-white shadow w-64">
+<div class="bids-component">
   {#if props.label}
-    <div class="font-semibold mb-2">{props.label}</div>
+    [Label]
+    <div class="label">{props.label}</div>
+    [END]
   {/if}
-
-  <div class="font-mono text-lg flex flex-wrap gap-2">
+  <div class="bids-list">
+    [LIST]]
     {#each bids() as bid}
-      <span class="px-2 py-1 rounded bg-gray-200">{bid}</span>
+       
+    <span class="bid">[Bid]{bid}</span>
     {/each}
+    [END LIST]
   </div>
 </div>

@@ -1,37 +1,62 @@
 <script lang="ts">
   import type { ParsedBlock } from '$lib/types';
   import { parseMarkdownTokens } from '$lib/markdown/parseMarkdownTokens';
-
   import HandComponent from '$lib/components/HandComponent.svelte';
   import DealComponent from '$lib/components/DealComponent.svelte';
   import BidsComponent from '$lib/components/BidsComponent.svelte';
   import UnknownCommand from '$lib/components/UnknownCommand.svelte';
 
-  // ✅ Get props the Runes way
   const props = $props<{ markdownText: string }>();
 
-  // ✅ Component mapping
   const componentsMap = {
     hand: HandComponent,
     deal: DealComponent,
-    bids: BidsComponent
-  } satisfies Record<string, typeof HandComponent>;
+    bids: BidsComponent,
+  } as const;
 
-  // ✅ Reactive derived parsing
-  const blocks = $derived(() => parseMarkdownTokens(props.markdownText));
+  type ComponentType = keyof typeof componentsMap;
+
+  // Use intersection type for render logic
+  type RenderBlock = ParsedBlock & {
+    key: string;
+    Comp?: typeof HandComponent | typeof DealComponent | typeof BidsComponent | typeof UnknownCommand;
+  };
+
+  const blocks = $derived(() => parseMarkdownTokens(props.markdownText ?? ''));
+
+  const renderedBlocks = $derived(() =>
+    blocks().map((block, index): RenderBlock => {
+      const key = `block-${block.kind}-${block.line}-${index}`;
+      const Comp =
+        block.kind === 'component' && block.type && componentsMap[block.type as ComponentType]
+          ? componentsMap[block.type as ComponentType]
+          : UnknownCommand;
+
+      return {
+        ...block,
+        key,
+        Comp,
+      };
+    })
+  );
 </script>
 
-<!-- ✅ Render blocks -->
 <div class="markdown-renderer">
-  {#each blocks() as block (block.key)}
+  {#each renderedBlocks() as block (block.key)}
     {#if block.kind === 'text'}
       <p>{@html block.content}</p>
-    {:else if block.kind === 'component'}
-      {#if componentsMap[block.type]}
-        <svelte:component this={componentsMap[block.type]} {...block} />
-      {:else}
-        <UnknownCommand type={block.type} />
-      {/if}
+
+    {:else if block.Comp === HandComponent}
+      <HandComponent cards={block.cards ?? ''} label={block.label ?? ''} />
+
+    {:else if block.Comp === DealComponent}
+      <DealComponent hands={block.hands ?? {}} label={block.label ?? ''} />
+
+    {:else if block.Comp === BidsComponent}
+      <BidsComponent seq={block.seq ?? ''} label={block.label ?? ''} />
+
+    {:else}
+      <UnknownCommand type={block.type ?? 'unknown'} />
     {/if}
   {/each}
 </div>

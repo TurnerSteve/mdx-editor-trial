@@ -1,92 +1,106 @@
-import type { ParsedBlock, KnownComponentType } from '$lib/types';
 
-const knownTypes = new Set<KnownComponentType>(['hand', 'deal', 'bids']);
+// src/lib/markdown/parseMarkdownTokens.ts
+import type { ParsedBlock, ParsedComponent } from '$lib/types';
 
-export function parseMarkdownTokens(mdText: string): ParsedBlock[] {
+interface RawComponentData {
+  id: string;
+  type: string;
+  label: string;
+  [key: string]: string;
+}
+
+function parseParams(paramStr: string): RawComponentData {
+  // Parses param string like "id:foo label:MyHand cards:T987.6.5432.AKQJ"
+  const result: RawComponentData = { id: '', type: '', label: '' };
+  const parts = paramStr.trim().split(/\s+/);
+  for (const part of parts) {
+    const [key, ...rest] = part.split(':');
+    if (!key) continue;
+    const value = rest.join(':'); // join in case ':' in value
+    if (key === 'id' || key === 'label' || key === 'cards' || key === 'seq' || key === 'type') {
+      result[key] = value;
+    } else if (['N', 'E', 'S', 'W'].includes(key)) {
+      // For deal hands
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
+  const lines = markdownText.split('\n');
   const blocks: ParsedBlock[] = [];
-  let key = 0;
 
-  const lines = mdText.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const componentMatch = line.match(/^\{\{(\w+):(.+)\}\}$/);
+    if (componentMatch) {
+      const type = componentMatch[1];
+      const paramStr = componentMatch[2].trim();
 
-  for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-    const line = lines[lineNumber];
-    const matches = [...line.matchAll(/\{\{(.*?)\}\}/g)];
-    let lastIndex = 0;
+      // parse parameters
+      const params = parseParams(paramStr);
+      const id = params.id || `auto-id-${i}`;
+      const label = params.label || '';
 
-    for (const match of matches) {
-      const before = line.slice(lastIndex, match.index);
-      if (before) {
-        blocks.push({
-          kind: 'text',
-          content: before,
-          key: `text-${key++}`,
-          line: lineNumber
-        });
-      }
+      // Build strongly typed component based on type
+      let component: ParsedComponent | null = null;
 
-      const raw = match[1].trim();
-
-      // Split on first colon to get type and rest
-      const colonIndex = raw.indexOf(':');
-      let type: string;
-      let restStr = '';
-      if (colonIndex >= 0) {
-        type = raw.slice(0, colonIndex).toLowerCase();
-        restStr = raw.slice(colonIndex + 1).trim();
+      if (type === 'hand') {
+        if (!params.cards) {
+          console.warn(`hand component missing cards at line ${i + 1}`);
+          continue;
+        }
+        component = {
+          kind: 'component',
+          id,
+          type: 'hand',
+          label,
+          line: i + 1,
+          cards: params.cards
+        };
+      } else if (type === 'deal') {
+        // Collect hands N/E/S/W cards
+        const hands: Partial<Record<'N' | 'E' | 'S' | 'W', string>> = {};
+        for (const dir of ['N', 'E', 'S', 'W'] as const) {
+          if (params[dir]) hands[dir] = params[dir];
+        }
+        component = {
+          kind: 'component',
+          id,
+          type: 'deal',
+          label,
+          line: i + 1,
+          hands
+        };
+      } else if (type === 'bids') {
+        if (!params.seq) {
+          console.warn(`bids component missing seq at line ${i + 1}`);
+          continue;
+        }
+        component = {
+          kind: 'component',
+          id,
+          type: 'bids',
+          label,
+          line: i + 1,
+          seq: params.seq
+        };
       } else {
-        type = raw.toLowerCase();
-      }
-
-      // If not a known type, treat entire tag as text
-      if (!knownTypes.has(type as KnownComponentType)) {
-        blocks.push({
-          kind: 'text',
-          content: match[0],
-          key: `text-${key++}`,
-          line: lineNumber,
-        });
-        lastIndex = (match.index ?? 0) + match[0].length;
+        // Unknown component type — skip or handle as needed
         continue;
       }
 
-      // Split restStr on ';' or ',' or whitespace for params
-      // Here we'll support 'key:value' or 'key=value' pairs, or just positional value as first token
-
-      const params: Record<string, string> = {};
-      let value = '';
-      if (restStr) {
-        const parts = restStr.split(/[,;]\s*|\s+/).filter(Boolean);
-        if (parts.length > 0) {
-          value = parts[0];
-          for (let i = 1; i < parts.length; i++) {
-            const [k, v] = parts[i].split(/[:=]/);
-            if (k && v) params[k.trim()] = v.trim();
-          }
-        }
-      }
-
+      if (component) blocks.push(component);
+    } else {
+      // Plain text block
       blocks.push({
-        kind: 'component',
-        type: type as KnownComponentType,
-        value,
-        key: `component-${key++}`,
-        line: lineNumber,
-        label: params.label,
-        ...params,
+        kind: 'text',
+        content: line,
+        line: i + 1,
+        key: `text-${i}`
       });
-
-      lastIndex = (match.index ?? 0) + match[0].length;
-    }
-
-    const after = line.slice(lastIndex);
-    if (after) {
-      blocks.push({ kind: 'text', content: after, key: `text-${key++}`, line: lineNumber });
-    }
-
-    if (matches.length === 0 && !line.trim()) {
-      blocks.push({ kind: 'text', content: '', key: `text-${key++}`, line: lineNumber });
     }
   }
-
   return blocks;
 }
