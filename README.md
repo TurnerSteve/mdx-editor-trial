@@ -2,39 +2,6 @@
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Creating a project
-
-- src/lib/.  
->-  markdown/
->-    markdownIt.ts             ← exports the configured markdown-it instance.  
->-    customSyntaxPlugin.ts     ← defines the {{custom:tag}} plugin.  
->-    customPlugin              ← deprecated  
->-    hydrate.                  ← deprecated  
->-    Markdown.svelte           ← deprecated  
-
--  components/
->- shared/
->>-    SuitSymbol.svelte.  
->>-    DealComponent.svelte.  
->>-    HandComponent.svelte.  
->>-    BidsComponent.svelte.  
->>-    UnknownCommand.svelte.   
-
--  markdown/
->- hydrate.ts
->- Markdown.svelte
->- markdownIt.ts
->- MarkdownRenderer.svelte
->- parseMarkdownTokens.ts
-
-- stypes/
->-  prose.ts
-
-- routes/
->-  test/
-
-  
-
 ### Components are added like this and this is easily expanded
 
 `

@@ -1,5 +1,6 @@
 <script lang="ts">
-  const props = $props<{ value: 's' | 'h' | 'd' | 'c' }>();
+  type Suit = 's' | 'h' | 'd' | 'c';
+  const props = $props<{ value: Suit }>();
 
   const suitMap = {
     s: { symbol: '♠', colorClass: 'text-black', name: 'Spades' },
@@ -9,7 +10,7 @@
   } as const;
 
   const suit = $derived(() => {
-    return suitMap[props.value] ?? { symbol: '?', colorClass: 'text-gray-400', name: 'Unknown' };
+    return suitMap[props.value as Suit] ?? { symbol: '?', colorClass: 'text-gray-400', name: 'Unknown' };
   });
 </script>
 
