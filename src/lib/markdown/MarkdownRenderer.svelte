@@ -6,6 +6,7 @@
 	import BidsComponent from '$lib/components/BidsComponent.svelte';
 	import UnknownCommand from '$lib/components/UnknownCommand.svelte';
 	import MarkdownIt from 'markdown-it';
+	import { parseBidSequence } from '$lib/markdown/validators/parseBidSequence';
 
 	const props = $props<{ markdownText: string }>();
 
@@ -32,6 +33,8 @@
 			| typeof UnknownCommand;
 		isValid?: boolean;
 		errors?: string[];
+		parsedBids?: ReturnType<typeof parseBidSequence>; // 👈 added
+	
 	};
 
 	const blocks = $derived(() => parseMarkdownTokens(props.markdownText ?? ''));
@@ -63,7 +66,9 @@
 		{#if block.kind === 'text'}
 			<p>{@html md.render(block.content)}</p>
 		{:else if isComponentBlock(block) && block.type === 'hand'}
-			<HandComponent cards={block.cards ?? ''} label={block.label ?? ''} />
+			<div spellcheck="false">
+				<HandComponent cards={block.cards ?? ''} label={block.label ?? ''} />
+			</div>
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
 					{#each block.errors ?? [] as err}
@@ -72,7 +77,9 @@
 				</ul>
 			{/if}
 		{:else if isComponentBlock(block) && block.type === 'deal'}
-			<DealComponent hands={block.hands ?? {}} label={block.label ?? ''} />
+			<div spellcheck="false">
+				<DealComponent hands={block.hands ?? {}} label={block.label ?? ''} />
+			</div>
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
 					{#each block.errors ?? [] as err}
@@ -81,7 +88,7 @@
 				</ul>
 			{/if}
 		{:else if isComponentBlock(block) && block.type === 'bids'}
-			<BidsComponent seq={block.seq ?? ''} label={block.label ?? ''} />
+			<BidsComponent bids={block.parsedBids ?? []} label={block.label ?? ''} />
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
 					{#each block.errors ?? [] as err}
