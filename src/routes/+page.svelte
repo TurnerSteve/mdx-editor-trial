@@ -2,7 +2,7 @@
   import MarkdownRenderer from '$lib/markdown/MarkdownRenderer.svelte';
 
   const demoMarkdown = `
-This is a test.
+### This is a test.
 
 {{hand:AKQJ.543.AKQ.42 label=North}}
 
