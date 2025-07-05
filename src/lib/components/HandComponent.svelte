@@ -1,37 +1,57 @@
 <script lang="ts">
-import { SuitSymbol } from '$lib/components';
+  import SuitSymbol from "./SuitSymbol.svelte";
+
   const props = $props<{ cards: string; label: string }>();
 
-  // Create a derived store for suits array, splitting cards string
+  // Split cards into suits, ensure 4 suits always
   let suits = $derived(() => {
     const parts = (props.cards ?? '').split('.');
     while (parts.length < 4) parts.push('');
     return parts;
   });
 
-  // Each suit derived individually from suits
   let spades = $derived(() => suits()[0]);
   let hearts = $derived(() => suits()[1]);
   let diamonds = $derived(() => suits()[2]);
   let clubs = $derived(() => suits()[3]);
 </script>
 
-
-
-<div class="w-40 rounded-lg border bg-white shadow p-2">
+<div class="w-40 rounded-lg border-2 border-gray-400 bg-white shadow m-2">
   {#if props.label}
-    <div class="text-sm font-bold text-center mb-1">{props.label}</div>
+    <div class="hand-label bg-gray-100 rounded-t-lg text-center font-bold text-sm mb-2 px-2 py-1">
+      {props.label}
+    </div>
   {/if}
-  <div class="flex items-center gap-1 text-sm">
-    <SuitSymbol value="s" /> <span class="font-mono">{suits()[0]}</span>
+  <div class="suit-row text-black">
+    <SuitSymbol value="s" />
+    <span>{spades()}</span>
   </div>
-  <div class="flex items-center gap-1 text-sm text-red-600">
-    <SuitSymbol value="h" /> <span class="font-mono">{suits()[1]}</span>
+  <div class="suit-row text-red-600">
+    <SuitSymbol value="h" />
+    <span>{hearts()}</span>
   </div>
-  <div class="flex items-center gap-1 text-sm text-red-600">
-    <SuitSymbol value="d" /> <span class="font-mono">{suits()[2]}</span>
+  <div class="suit-row text-red-600">
+    <SuitSymbol value="d" />
+    <span>{diamonds()}</span>
   </div>
-  <div class="flex items-center gap-1 text-sm">
-    <SuitSymbol value="c" /> <span class="font-mono">{suits()[3]}</span>
+  <div class="suit-row text-black">
+    <SuitSymbol value="c" />
+    <span>{clubs()}</span>
   </div>
 </div>
+
+<style>
+  .hand-label {
+    /* already styled above */
+  }
+
+  .suit-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;       /* small gap between symbol and cards */
+    font-family: monospace;
+    font-size: 0.875rem; /* text-sm */
+    letter-spacing: 0.1em; /* spacing between cards */
+    padding: 0 0.5rem ;
+  }
+</style>

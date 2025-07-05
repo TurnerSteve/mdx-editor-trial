@@ -1,5 +1,3 @@
-
-<!-- SuitSymbol.svelte -->
 <script lang="ts">
   const props = $props<{ value: 's' | 'h' | 'd' | 'c' }>();
 
@@ -10,10 +8,11 @@
     c: { symbol: '♣', colorClass: 'text-black', name: 'Clubs' }
   } as const;
 
-  type SuitKey = keyof typeof suitMap;
-
   const suit = $derived(() => {
-    const key = props.value as SuitKey;
-    return suitMap[key] ?? { symbol: '?', colorClass: '', name: 'Unknown' };
+    return suitMap[props.value] ?? { symbol: '?', colorClass: 'text-gray-400', name: 'Unknown' };
   });
 </script>
+
+<span class={`font-semibold ${suit().colorClass}`} title={suit().name}>
+  {suit().symbol}
+</span>
