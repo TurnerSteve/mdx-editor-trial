@@ -1,20 +1,18 @@
-// src/lib/types.ts
-// Common base for all components
-// src/lib/types.ts
-
 export type ComponentType = 'hand' | 'deal' | 'bids';
 
 export interface ParsedComponentBase {
   kind: 'component';
   id: string;
-  type: ComponentType;
+  type: ComponentType | string;
   label: string;
   line: number;
+  isValid?: boolean;
+  errors?: string[];
 }
 
 export interface HandComponentParams extends ParsedComponentBase {
   type: 'hand';
-  cards: string; // e.g. "T987.6.5432.AKQJ"
+  cards: string;
 }
 
 export interface DealComponentParams extends ParsedComponentBase {
@@ -24,7 +22,7 @@ export interface DealComponentParams extends ParsedComponentBase {
 
 export interface BidsComponentParams extends ParsedComponentBase {
   type: 'bids';
-  seq: string; // bids sequence as string
+  seq: string;
 }
 
 export type ParsedComponent = HandComponentParams | DealComponentParams | BidsComponentParams;

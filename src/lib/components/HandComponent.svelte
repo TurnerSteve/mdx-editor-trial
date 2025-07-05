@@ -1,6 +1,5 @@
 <script lang="ts">
-	import SuitSymbol from "./SuitSymbol.svelte";
-
+import { SuitSymbol } from '$lib/components';
   const props = $props<{ cards: string; label: string }>();
 
   // Create a derived store for suits array, splitting cards string

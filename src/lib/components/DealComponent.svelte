@@ -1,5 +1,5 @@
 <script lang="ts">
-	import HandComponent from "./HandComponent.svelte";
+	import { HandComponent } from '$lib/components';
 
   const props = $props<{ hands: Partial<Record<'N' | 'E' | 'S' | 'W', string>>; label: string }>();
 </script>

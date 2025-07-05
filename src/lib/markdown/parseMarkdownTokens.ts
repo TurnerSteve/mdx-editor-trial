@@ -1,31 +1,6 @@
-
-// src/lib/markdown/parseMarkdownTokens.ts
-import type { ParsedBlock, ParsedComponent } from '$lib/types';
-
-interface RawComponentData {
-  id: string;
-  type: string;
-  label: string;
-  [key: string]: string;
-}
-
-function parseParams(paramStr: string): RawComponentData {
-  // Parses param string like "id:foo label:MyHand cards:T987.6.5432.AKQJ"
-  const result: RawComponentData = { id: '', type: '', label: '' };
-  const parts = paramStr.trim().split(/\s+/);
-  for (const part of parts) {
-    const [key, ...rest] = part.split(':');
-    if (!key) continue;
-    const value = rest.join(':'); // join in case ':' in value
-    if (key === 'id' || key === 'label' || key === 'cards' || key === 'seq' || key === 'type') {
-      result[key] = value;
-    } else if (['N', 'E', 'S', 'W'].includes(key)) {
-      // For deal hands
-      result[key] = value;
-    }
-  }
-  return result;
-}
+import type { ParsedBlock } from '$lib/types';
+import { parseParams } from './parseParams';
+import { componentValidators } from './validators';
 
 export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
   const lines = markdownText.split('\n');
@@ -34,73 +9,75 @@ export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const componentMatch = line.match(/^\{\{(\w+):(.+)\}\}$/);
+
     if (componentMatch) {
       const type = componentMatch[1];
       const paramStr = componentMatch[2].trim();
-
-      // parse parameters
       const params = parseParams(paramStr);
+
+      const validator = componentValidators[type];
+      const validation = validator?.(params) ?? { isValid: false, errors: ['Unknown component type.'] };
+
       const id = params.id || `auto-id-${i}`;
       const label = params.label || '';
 
-      // Build strongly typed component based on type
-      let component: ParsedComponent | null = null;
-
-      if (type === 'hand') {
-        if (!params.cards) {
-          console.warn(`hand component missing cards at line ${i + 1}`);
-          continue;
-        }
-        component = {
+      if (!validation.isValid) {
+        blocks.push({
           kind: 'component',
+          type,
           id,
-          type: 'hand',
           label,
           line: i + 1,
-          cards: params.cards
-        };
-      } else if (type === 'deal') {
-        // Collect hands N/E/S/W cards
-        const hands: Partial<Record<'N' | 'E' | 'S' | 'W', string>> = {};
-        for (const dir of ['N', 'E', 'S', 'W'] as const) {
-          if (params[dir]) hands[dir] = params[dir];
-        }
-        component = {
-          kind: 'component',
-          id,
-          type: 'deal',
-          label,
-          line: i + 1,
-          hands
-        };
-      } else if (type === 'bids') {
-        if (!params.seq) {
-          console.warn(`bids component missing seq at line ${i + 1}`);
-          continue;
-        }
-        component = {
-          kind: 'component',
-          id,
-          type: 'bids',
-          label,
-          line: i + 1,
-          seq: params.seq
-        };
-      } else {
-        // Unknown component type — skip or handle as needed
+          isValid: false,
+          errors: validation.errors,
+        } as ParsedBlock);
         continue;
       }
 
-      if (component) blocks.push(component);
+      if (type === 'hand') {
+        blocks.push({
+          kind: 'component',
+          type: 'hand',
+          id,
+          label,
+          line: i + 1,
+          isValid: true,
+          cards: params.cards,
+        });
+      } else if (type === 'deal') {
+        const hands: Record<string, string> = {};
+        for (const dir of ['N', 'E', 'S', 'W']) {
+          if (params[dir]) hands[dir] = params[dir];
+        }
+        blocks.push({
+          kind: 'component',
+          type: 'deal',
+          id,
+          label,
+          line: i + 1,
+          isValid: true,
+          hands,
+        });
+      } else if (type === 'bids') {
+        blocks.push({
+          kind: 'component',
+          type: 'bids',
+          id,
+          label,
+          line: i + 1,
+          isValid: true,
+          seq: params.seq,
+        });
+      }
     } else {
-      // Plain text block
       blocks.push({
         kind: 'text',
         content: line,
         line: i + 1,
-        key: `text-${i}`
+        key: `text-${i}`,
       });
     }
   }
+
   return blocks;
 }
