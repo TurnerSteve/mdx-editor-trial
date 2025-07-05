@@ -59,8 +59,9 @@
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		grid-template-rows: auto auto auto;
-		gap: 1rem;
+		gap: 0rem;
 		width: max-content;
-		margin: auto;
+		margin: 0rem;
+    padding: 0rem
 	}
 </style>

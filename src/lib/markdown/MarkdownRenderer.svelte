@@ -5,8 +5,15 @@
 	import DealComponent from '$lib/components/DealComponent.svelte';
 	import BidsComponent from '$lib/components/BidsComponent.svelte';
 	import UnknownCommand from '$lib/components/UnknownCommand.svelte';
+	import MarkdownIt from 'markdown-it';
 
 	const props = $props<{ markdownText: string }>();
+
+	const md = new MarkdownIt({
+		html: false,
+		breaks: true,
+		linkify: true
+	});
 
 	const componentsMap = {
 		hand: HandComponent,
@@ -54,7 +61,7 @@
 <div class="markdown-renderer">
 	{#each renderedBlocks() as block (block.key)}
 		{#if block.kind === 'text'}
-			<p>{@html block.content}</p>
+			<p>{@html md.render(block.content)}</p>
 		{:else if isComponentBlock(block) && block.type === 'hand'}
 			<HandComponent cards={block.cards ?? ''} label={block.label ?? ''} />
 			{#if !block.isValid}
