@@ -4,3 +4,4 @@
 ### Deal
 
 {{deal:N:AKxxxx.AJT.xxx.x E:xx.Qxx.Kxx.QTxxx W:JT9x.x.Jxxx.KJxx S:Q.K86532.AQxx.Ax label=ExampleDeal}}
+ 
