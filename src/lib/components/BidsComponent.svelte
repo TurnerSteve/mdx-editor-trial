@@ -10,9 +10,9 @@
   
 </script>
 
-<div class="inline-block rounded-xl border-2 border-gray-300 bg-white font-mono text-sm shadow-sm">
+<div class="inline-block rounded-xl border-2 border-blue-300 bg-white font-mono text-sm shadow-sm">
   {#if props.label}
-    <div class="w-full rounded-t-xl bg-gray-100 px-4 py-2 text-center font-semibold text-gray-700">
+    <div class="w-full rounded-t-xl bg-blue-100 px-4 py-2 text-center font-semibold text-gray-700">
       {props.label}
     </div>
   {/if}
@@ -36,7 +36,7 @@
 
   .bid {
     padding: 0.rem 0.5rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #93c5fd; /* Tailwind's blue-300: hex = #93c5fd */
     border-radius: 0.25rem;
     text-align: center;
   }

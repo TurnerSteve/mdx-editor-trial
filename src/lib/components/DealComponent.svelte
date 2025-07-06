@@ -14,7 +14,7 @@
 	};
 </script>
 
-<div class="deal-grid rounded-xl border-2 border-gray-300 bg-white p-4 font-mono text-sm shadow-sm">
+<div class="deal-grid rounded-xl border-2 border-blue-300 bg-white p-4 font-mono text-sm shadow-sm">
 	{#if props.label}
 		<div
 			class="col-span-3 mb-2 rounded-t-md bg-gray-100 py-1 text-center font-semibold text-gray-700"
