@@ -41,6 +41,11 @@
 
 	const renderedBlocks = $derived(() =>
 		blocks().map((block, index): RenderBlock => {
+
+		if (block.kind === 'component' && block.type === 'bids') {
+			console.log('Parsed Bids Block:', block);
+		}
+
 			const key = `block-${block.kind}-${block.line}-${index}`;
 			const Comp =
 				block.kind === 'component' && block.type && componentsMap[block.type as ComponentType]
@@ -88,7 +93,8 @@
 				</ul>
 			{/if}
 		{:else if isComponentBlock(block) && block.type === 'bids'}
-			<BidsComponent bids={block.parsedBids ?? []} label={block.label ?? ''} />
+		    {@html console.log('Rendering BidsComponent with:', block.seq)}
+			<BidsComponent seq={block.seq ?? []} label={block.label ?? ''} />
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
 					{#each block.errors ?? [] as err}

@@ -25,7 +25,7 @@ export interface BidsComponentParams extends ParsedComponentBase {
   seq: string;
 }
 
-export type ParsedComponent = HandComponentParams | DealComponentParams | BidsComponentParams;
+export type ParsedComponent = HandComponentParams | DealComponentParams | BidsComponentParams ;
 
 export interface TextBlock {
   kind: 'text';

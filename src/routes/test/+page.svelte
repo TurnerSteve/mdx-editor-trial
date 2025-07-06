@@ -12,33 +12,26 @@
 	let markdownText = $state('');
 
 	// Derived list of available test files
-	let filenames = $derived(() => Object.keys(files)
-    .map((path) => path
-    .split('/')
-    .pop()!)
-    .sort()
-  );
+	let filenames = $derived(() =>
+		Object.keys(files)
+			.map((path) => path.split('/').pop()!)
+			.sort()
+	);
 
-
-console.log('[Selected ID]', selected);
-console.log('[Available files]', Object.keys(files));
+	console.log('[Available files]', Object.keys(files));
 	// Load the selected file content whenever it changes
-$effect(() => {
-	const id = selected;
-	const fullPath = Object.keys(files).find((path) => path.endsWith(`/${id}`));
-	const loader = fullPath ? files[fullPath] : undefined;
+	$effect(() => {
+		const id = selected;
+		const fullPath = Object.keys(files).find((path) => path.endsWith(`/${id}`));
+		const loader = fullPath ? files[fullPath] : undefined;
 
-	if (loader) {
-		loader().then((mod) => {
-			const text = mod as string;
-			markdownText = text;
-			console.log('[MD loaded]', text);
-		});
-	} else {
-		console.warn('[MD NOT FOUND]', id);
-	}
-});
-
+		if (loader) {
+			loader().then((mod) => {
+				const text = mod as string;
+				markdownText = text;
+			});
+		} 
+	});
 </script>
 
 <select

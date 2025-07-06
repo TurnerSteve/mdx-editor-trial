@@ -23,27 +23,18 @@ bids:id label:MyBids seq: - 1S.P.2H.P.3H.P.4C.P.5H.P.6H.P.P.P
 `
 
 
-### Bidding rules
+### Simple Rule List for Bridge Bidding Validation
 
-- Contract bid: e.g. 1C, 2D, 7NT
-- Special actions: P (Pass), X (Double), XX (Redouble)
-- Skip token: - (denotes a missing bid — usually a placeholder for turn order)
+1.	Up to 3 dashes (-) allowed only at the start of the sequence. This determines the opening bidder.
+2.	Contract bids (1–7 + C/D/H/S/NT) must strictly increase in level and follow suit order (C < D < H < S < NT) within the same level.
+3.	A pass (P) is always allowed, but no more than 3 passes can occur consecutively.
+4.	Three consecutive passes (P P P) end the auction — no further bids allowed afterward.
+5.	A double (X) can only follow a contract bid or up to 2 passes after a contract bid.
+6.	A redouble (XX) can only follow a double or up to 2 passes after a double.
+7.	No bidding (contract, double, redouble, or pass) is allowed after 3 passes in a row.
+8.	Any bid that breaks the sequence order or the above rules is invalid.
 
-- R1 Max 3 total skip (-) tokens allowed
-- R2 Contract bid must be from 1C to 7NT
-- R3 Contract levels must increase or stay same with higher suit
-- R4 Contract suit order at same level: C < D < H < S < NT
-- R5X (double) must follow a contract bid
-- R6 XX (redouble) must follow a double
-- R7 P (pass) must follow a contract, double, or redouble
-- R8 No more than 3 passes in a row
-- R9 Auction ends after 3 passes in a row (optional logic for completion check)
-- R10 No skip allowed mid-sequence (optional strictness)
-- First 4 bids determine the dealer and direction of play.
-- Doubles and redoubles only apply to the last contract bid.
-- Only one contract may be doubled or redoubled at a time.
-- Opening bid must be a contract or pass — not double/redouble.
-
+It is impossible to enter a legal contract that can be viewed !!
 
 # File Structure
 

@@ -1,27 +1,55 @@
 <script lang="ts">
-    import type { Bid } from '$lib/markdown/validators/parseBidSequence';
+  import { parseBidSequence } from "$lib/markdown/validators/parseBidSequence";
 
-  const props = $props<{ label?: string; bids: Bid[] }>();
+  const props = $props<{
+    seq: string;  // A string of legal bids in a sequence that has been validated
+    label?: string;
+  }>();
 
-  // Use derived for reactive bids array
-  let bids = $derived(() => (props.seq ?? '').trim().split(/\s+/).filter(Boolean));
-
-  console.log('[Bid Sequence]', props.seq)
+  const bids = $derived(() => parseBidSequence(props.seq));
+  
 </script>
 
-<!-- Render bids however you like -->
-<div>
+<div class="inline-block rounded-xl border-2 border-gray-300 bg-white font-mono text-sm shadow-sm">
   {#if props.label}
-    <h3>{props.label}</h3>
+    <div class="w-full rounded-t-xl bg-gray-100 px-4 py-2 text-center font-semibold text-gray-700">
+      {props.label}
+    </div>
   {/if}
-  <div class="bids">
-    {#each props.bids as bid}
-      <span class={`bid ${bid.type}`}>{bid.raw}</span>
-    {/each}
+
+  <div class="p-4">
+    <div class="bids-grid">
+      {#each bids() as bid}
+        <div class="bid">{bid.raw}</div>
+      {/each}
+    </div>
   </div>
 </div>
 
 <style>
+  .bids-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(2rem, auto));
+    gap: 0.2rem;
+    justify-content: start;
+  }
+
+  .bid {
+    padding: 0.rem 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    text-align: center;
+  }
+</style>
+
+
+
+
+
+
+
+
+<!-- <style>
   .bid {
     margin-right: 0.25rem;
     padding: 0.1rem 0.4rem;
@@ -34,4 +62,4 @@
   .double   { background-color: #fdd; }
   .redouble { background-color: #fbb; }
   .invalid  { background-color: #f88; color: white; }
-</style>
+</style> -->

@@ -16,7 +16,7 @@
   let clubs = $derived(() => suits()[3]);
 </script>
 
-<div class="w-28 rounded-lg border-2 border-gray-400 bg-white shadow m-2">
+<div class="deal-containerw-28 rounded-lg border-2 border-gray-400 bg-white shadow m-2">
   {#if props.label}
     <div class="hand-label bg-gray-100 rounded-t-lg text-center font-bold text-sm mb-2 px-2 py-1">
       {props.label}

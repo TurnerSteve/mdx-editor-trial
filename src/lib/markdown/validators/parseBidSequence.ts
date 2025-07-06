@@ -1,6 +1,6 @@
 export interface Bid {
   raw: string;
-  type: 'skip' | 'pass' | 'contract' | 'double' | 'redouble' | 'invalid';
+  type: 'skip' | 'pass' | 'contract' | 'dbl' | 'rdbl' | 'invalid';
   level?: number;
   suit?: 'C' | 'D' | 'H' | 'S' | 'NT';
 }
@@ -20,11 +20,11 @@ export function parseBidSequence(seq: string): Bid[] {
     }
 
     if (raw === 'X') {
-      return { raw, type: 'double' };
+      return { raw, type: 'dbl' };
     }
 
     if (raw === 'XX') {
-      return { raw, type: 'redouble' };
+      return { raw, type: 'rdbl' };
     }
 
     const match = raw.match(/^([1-7])(C|D|H|S|NT)$/);
