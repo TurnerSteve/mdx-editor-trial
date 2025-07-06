@@ -12,6 +12,7 @@
 <div class="flex h-screen gap-6 bg-gray-50 p-6">
 	<!-- Markdown Editor (left) -->
 	<textarea
+		spellcheck="false"
 		bind:value={markdownText}
 		rows="10"
 		class="w-1/2 resize-none rounded-xl border-2 border-gray-300 bg-white p-4 font-mono shadow-sm focus:border-green-600 focus:ring-4 focus:ring-green-400 focus:outline-none"

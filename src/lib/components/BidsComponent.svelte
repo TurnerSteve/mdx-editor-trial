@@ -54,7 +54,7 @@
 
   .bid {
     padding: 0.rem 0.5rem;
-    margin: 0.1rem;
+    margin: 0.15rem;
     border: 1px solid #d1d5db; /* Tailwind's blue-300: hex = #93c5fd */
     border-radius: 0.5rem;
     text-align: center;
