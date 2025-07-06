@@ -2,6 +2,7 @@
   import SuitSymbol from "./SuitSymbol.svelte";
 
   const props = $props<{ cards: string; label: string }>();
+  const hasCards = $derived(() => !!props.cards?.trim());
 
   // Split cards into suits, ensure 4 suits always
   let suits = $derived(() => {
@@ -16,42 +17,49 @@
   let clubs = $derived(() => suits()[3]);
 </script>
 
-<div class="deal-containerw-28 rounded-lg border-2 border-blue-300 bg-white shadow m-2">
+<div class="deal-container w-28 rounded-lg border-2 border-blue-300 bg-white shadow m-2">
   {#if props.label}
     <div class="hand-label bg-blue-100 rounded-t-lg text-center font-bold text-sm mb-2 px-2 py-1">
       {props.label}
     </div>
   {/if}
-  <div class="suit-row text-black">
-    <SuitSymbol value="s" />
-    <span>{spades()}</span>
-  </div>
-  <div class="suit-row text-red-600">
-    <SuitSymbol value="h" />
-    <span>{hearts()}</span>
-  </div>
-  <div class="suit-row text-red-600">
-    <SuitSymbol value="d" />
-    <span>{diamonds()}</span>
-  </div>
-  <div class="suit-row text-black">
-    <SuitSymbol value="c" />
-    <span>{clubs()}</span>
-  </div>
+
+  {#if hasCards()}
+    <div class="suit-row text-black">
+      <SuitSymbol value="s" />
+      <span>{spades()}</span>
+    </div>
+    <div class="suit-row text-red-600">
+      <SuitSymbol value="h" />
+      <span>{hearts()}</span>
+    </div>
+    <div class="suit-row text-red-600">
+      <SuitSymbol value="d" />
+      <span>{diamonds()}</span>
+    </div>
+    <div class="suit-row text-black">
+      <SuitSymbol value="c" />
+      <span>{clubs()}</span>
+    </div>
+  {:else}
+    <div class="text-red-600 px-2 pb-2 text-sm font-medium">
+      ⚠️ No cards provided or malformed hand
+    </div>
+  {/if}
 </div>
 
 <style>
-  .hand-label {
-    /* already styled above */
-  }
-
   .suit-row {
     display: flex;
     align-items: center;
-    gap: 0.25rem;       /* small gap between symbol and cards */
+    gap: 0.25rem;
     font-family: monospace;
-    font-size: 0.875rem; /* text-sm */
-    letter-spacing: 0.1em; /* spacing between cards */
-    padding: 0 0.5rem ;
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
+    padding: 0 0.5rem;
+  }
+
+  .deal-container {
+    width: max-content;
   }
 </style>
