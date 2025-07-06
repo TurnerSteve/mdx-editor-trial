@@ -46,10 +46,7 @@ src/
 │   │   ├── BidsComponent.svelte
 │   │   ├── SuitSymbol.svelte
 │   │   ├── UnknownCommand.svelte
-│   │   └── shared/
-│   │       ├── parseBid.ts
-│   │       ├── parseDeal.ts
-│   │       └── parseHand.ts
+
 │   │
 │   ├── markdown/
 │   │   ├── MarkdownRenderer.svelte
@@ -68,6 +65,7 @@ src/
 │   │   └── prose.css
 │   │
 │   ├── tests/
+│   │   ├── demoDealBids.md
 │   │   ├── bids1.md
 │   │   ├── deal1.md
 │   │   ├── hand1.md
