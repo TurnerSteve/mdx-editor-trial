@@ -4,28 +4,30 @@
   max-width: 65ch;
   line-height: 1.75;
   font-size: 1rem;
-  color: #1f2937; /* gray-800 */
+  color: #6197e9; /* gray-800 */
 }
 
 .prose h1 {
-  font-size: 2.25rem; /* text-4xl */
+  font-size: 2rem; /* text-4xl */
   font-weight: 700;   /* font-bold */
-  margin-top: 2rem;   /* mt-8 */
-  margin-bottom: 1rem;/* mb-4 */
+  margin-top: 0rem;   /* mt-8 */
+  margin-bottom: 0rem;/* mb-4 */
+  background-color: #f3f4f6; /* bg-gray-100 */
+  padding-left: 1rem;
 }
 
 .prose h2 {
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 1.5rem; /* text-3xl */
   font-weight: 600;    /* font-semibold */
-  margin-top: 1.5rem;  /* mt-6 */
-  margin-bottom: 0.75rem; /* mb-3 */
+  margin-top: 0rem;  /* mt-6 */
+  margin-bottom: 0rem; /* mb-3 */
 }
 
 .prose h3 {
-  font-size: 1.5rem;   /* text-2xl */
+  font-size: 1rem;   /* text-2xl */
   font-weight: 600;    /* font-semibold */
-  margin-top: 1rem;    /* mt-4 */
-  margin-bottom: 0.5rem; /* mb-2 */
+  margin-top: 0rem;    /* mt-4 */
+  margin-bottom: 0rem; /* mb-2 */
 }
 
 .prose p {
@@ -76,7 +78,7 @@
 }
 
 .prose pre {
-  background-color: #f3f4f6; /* bg-gray-100 */
+  background-color: #f6f3f6; /* bg-gray-100 */
   padding: 1rem;             /* p-4 */
   border-radius: 0.25rem;    /* rounded */
   overflow-x: auto;          /* overflow-x-auto */
@@ -90,7 +92,7 @@
 }
 
 .prose hr {
-  margin-top: 2rem;          /* my-8 */
-  margin-bottom: 2rem;
+  margin-top: 1rem ;          /* my-8 */
+  margin-bottom: 0rem;
   border-color: #d1d5db;     /* border-gray-300 */
 }

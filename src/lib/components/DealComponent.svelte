@@ -14,7 +14,7 @@
 	};
 </script>
 
-<div class="deal-grid rounded-xl border-2 border-blue-300 bg-white p-4 font-mono text-sm shadow-sm">
+<div class="deal-grid rounded-xl border-2 border-green-300 bg-white p-4 font-mono text-sm shadow-sm">
 	{#if props.label}
 		<div
 			class="col-span-3 mb-2 rounded-t-md bg-gray-100 py-1 text-center font-semibold text-gray-700"
@@ -32,7 +32,7 @@
 	</div>
 
 	<!-- West -->
-	<div class="col-start-1 row-start-2 flex flex-col items-end">
+	<div class="col-start-1 row-start-2 flex flex-col items-end ml-2">
 		{#if props.hands.W}
 			<HandView cards={props.hands.W} label={directionLabels.W} />
 		{/if}

@@ -19,9 +19,9 @@
   
 </script>
 
-<div class="inline-block rounded-xl border-2 border-blue-300 bg-white font-mono text-sm shadow-sm">
+<div class="inline-block rounded-xl w-36 border-2 border-green-300 bg-white font-mono text-sm shadow-sm">
   {#if props.label}
-    <div class="w-full rounded-t-xl bg-blue-100 px-4 py-2 text-center font-semibold text-gray-700">
+    <div class="w-36 rounded-t-xl bg-green-100 px-4 py-2 text-center font-semibold text-gray-700">
       {props.label}
     </div>
   {/if}
@@ -43,6 +43,7 @@
     {/each}
   </div>
 </div>
+
 
 <style>
   .bids-grid {
@@ -73,10 +74,7 @@
     color: #16a34a; /* green-600 */
   }
   /* Make suit symbols slightly bigger */
-  .suit {
-    font-weight: 900;
-    font-size: 1.1em;
-  }
+
 </style>
 
 

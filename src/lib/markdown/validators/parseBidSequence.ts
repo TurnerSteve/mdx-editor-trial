@@ -27,7 +27,7 @@ export function parseBidSequence(seq: string): Bid[] {
       return { raw, type: 'rdbl' };
     }
 
-    const match = raw.match(/^([1-7])(C|D|H|S|NT)$/);
+    const match = raw.match(/^([1-7])(C|D|H|S|N)$/);
     if (match) {
       const level = parseInt(match[1]);
       const suit = match[2] as Bid['suit'];

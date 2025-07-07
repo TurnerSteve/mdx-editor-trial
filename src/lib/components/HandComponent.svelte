@@ -16,10 +16,10 @@
   let diamonds = $derived(() => suits()[2]);
   let clubs = $derived(() => suits()[3]);
 </script>
-
-<div class="deal-container w-28 rounded-lg border-2 border-blue-300 bg-white shadow m-2">
+<div class="w-32">
+<div class="display: inline-block mr-1 mt-1 w-28 rounded-lg border-2 border-green-300 bg-white shadow mb-2">
   {#if props.label}
-    <div class="hand-label bg-blue-100 rounded-t-lg text-center font-bold text-sm mb-2 px-2 py-1">
+    <div class="hand-label bg-green-100 rounded-t-lg text-center font-bold">
       {props.label}
     </div>
   {/if}
@@ -27,19 +27,19 @@
   {#if hasCards()}
     <div class="suit-row text-black">
       <SuitSymbol value="s" />
-      <span>{spades()}</span>
+      <div>{spades()}</div>
     </div>
     <div class="suit-row text-red-600">
       <SuitSymbol value="h" />
-      <span>{hearts()}</span>
+      <div>{hearts()}</div>
     </div>
     <div class="suit-row text-red-600">
       <SuitSymbol value="d" />
-      <span>{diamonds()}</span>
+      <div>{diamonds()}</div>
     </div>
     <div class="suit-row text-black">
       <SuitSymbol value="c" />
-      <span>{clubs()}</span>
+      <div>{clubs()}</div>
     </div>
   {:else}
     <div class="text-red-600 px-2 pb-2 text-sm font-medium">
@@ -47,8 +47,12 @@
     </div>
   {/if}
 </div>
+</div>
 
 <style>
+  .hand-label {
+    padding: 0.5;
+  }
   .suit-row {
     display: flex;
     align-items: center;
@@ -59,7 +63,4 @@
     padding: 0 0.5rem;
   }
 
-  .deal-container {
-    width: max-content;
-  }
 </style>
