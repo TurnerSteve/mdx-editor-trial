@@ -1,100 +1,156 @@
 <script lang="ts">
-  import { parseBidSequence } from "$lib/markdown/validators/parseBidSequence";
+  // Runes mode: receive props via $props, derive state with $state and $derived
+  import { normalizeSequence } from '$lib/utils/normalizeSequence';
+  import { validateBidsSequence, type BidError } from '$lib/markdown/validators/validateBids';
 
-  const props = $props<{
-    seq: string;  // A string of legal bids in a sequence that has been validated
-    label?: string;
-  }>();
+  // Receive raw sequence (string[] or whitespace-delimited string)
+  let { seq: rawSeq } = $props<{ seq: string[] | string }>();
 
-  const bids = $derived(() => parseBidSequence(props.seq));
+  // Always work with a true string[]
+  const normalizedSeq = $derived(() => normalizeSequence(rawSeq));
 
-    const suitSymbols: Record<string, string> = {
-    S: '♠',
-    H: '♥',
-    D: '♦',
-    C: '♣'
-  };
+  // Validate bids
+  const result = $derived(() => validateBidsSequence(normalizedSeq()));
+  const errors = $derived(() => result().errors);
+  const errorMap = $derived(() => new Map<number, string>(errors().map((e) => [e.index, e.message])));
 
-  const isRedSuit = (suit?: string) => suit === 'H' || suit === 'D';
-  
+  // UI state
+  let showErrors = $state(false);
+
+  // Helpers for rendering
+  const suitSymbols: Record<string, string> = { C: '♣', D: '♦', H: '♥', S: '♠' };
+  const bidRegex = /^([1-7])(C|D|H|S|NT)$/;
 </script>
 
-<div class="inline-block rounded-xl w-36 border-2 border-green-300 bg-white font-mono text-sm shadow-sm">
-  {#if props.label}
-    <div class="w-36 rounded-t-xl bg-green-100 px-4 py-2 text-center font-semibold text-gray-700">
-      {props.label}
-    </div>
-  {/if}
-
+<div class="bids-component inline-block rounded-xl border-2 border-blue-300 bg-white font-mono text-sm shadow-sm">
   <div class="bids-grid">
-    {#each bids() as bid}
-      <div
-        class="bid"
-        class:red-suit={isRedSuit(bid.suit)}
-        class:blue-bid={bid.raw === 'X' || bid.raw === 'XX'}
-        class:green-pass={bid.raw === 'P'}
-      >
-        {#if bid.level && bid.suit}
-          <span>{bid.level}{suitSymbols[bid.suit]}</span>
+    {#each normalizedSeq() as bid, i}
+      <div class="bid-container">
+        {#if errorMap().has(i)}
+          <!-- Highlight invalid bids -->
+          <span class="bid invalid" title={errorMap().get(i)}>
+            {bid}
+          </span>
         {:else}
-          <span>{bid.raw}</span>
+          {@const match = bidRegex.exec(bid)}
+          {#if match}
+            <!-- Contract bids: level + suit symbol -->
+            <span class="bid contract">
+              <span class="level">{match[1]}</span>
+              <span class="suit {match[2] === 'H' || match[2] === 'D' ? 'red-suit' : ''}">{suitSymbols[match[2]]}</span>
+            </span>
+          {:else if bid === 'P'}
+            <!-- Pass -->
+            <span class="bid pass green-pass">P</span>
+          {:else if bid === 'X'}
+            <!-- Double -->
+            <span class="bid dbl blue-bid">X</span>
+          {:else if bid === 'XX'}
+            <!-- Redouble -->
+            <span class="bid rdbl">XX</span>
+          {:else}
+            <!-- Fallback raw text -->
+            <span class="bid">{bid}</span>
+          {/if}
         {/if}
       </div>
     {/each}
   </div>
-</div>
 
+  {#if !result().isLegal}
+    <div class="bids-footer">
+      <button onclick={() => (showErrors = !showErrors)} class="error-toggle">
+        {showErrors ? 'Hide' : 'Show'} errors ({errors().length})
+      </button>
+      {#if showErrors}
+        <ul class="error-list">
+          {#each errors() as { index, bid, message }}
+            <li>Position {index + 1} (“{bid}”): {message}</li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
+  {/if}
+</div>
 
 <style>
   .bids-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(2rem, auto));
-    gap: 0.2rem;
-    justify-content: start;
+    grid-template-columns: repeat(4, minmax(2rem, 1fr));
+    gap: 0.25rem;
+  }
+
+  .bid-container {
+    position: relative;
+    width: 2rem; /* ⬅️ change: fixed width for uniform boxes */
+    height: 1.5rem; /* ⬅️ change: fixed height for uniform boxes */
+    display: flex; /* ⬅️ center content */
+    align-items: center;
+    justify-content: center;
+    margin: 0.25rem;
   }
 
   .bid {
-    padding: 0.rem 0.5rem;
-    margin: 0.15rem;
-    border: 1px solid #d1d5db; /* Tailwind's blue-300: hex = #93c5fd */
-    border-radius: 0.5rem;
+    width: 100%; /* ⬅️ fill container */
+    height: 100%;
+    display: flex; /* ⬅️ center inner text/symbol */
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
     text-align: center;
   }
 
-
-  .red-suit {
-    color: #dc2626; /* red-600 */
+  .contract {
+    display: flex;
+    gap: 0.1rem;
+    justify-content: center;
+    align-items: center;
   }
 
-  .blue-bid {
-    color: #1e40af; /* blue-900 */
+  .level {
+    font-weight: 600;
+  }
+
+  .suit {
+    font-size: 1.1em;
+  }
+
+  .red-suit {
+    color: #dc2626;
+  }
+
+  .blue-bid, .dbl, .rdbl {
+    color: #1e40af;
+    font: bold;
   }
 
   .green-pass {
-    color: #16a34a; /* green-600 */
+    color: #16a34a;
   }
-  /* Make suit symbols slightly bigger */
 
+  .bid.invalid {
+    text-decoration: underline wavy red;
+    cursor: help;
+  }
+
+  .bids-footer {
+    grid-column: 1 / -1; /* span all 4 columns */
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .error-toggle {
+    background: none;
+    border: none;
+    color: #007acc;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-bottom: 0.25rem;
+  }
+
+  .error-list {
+    padding-left: 1rem;
+    color: red;
+  }
 </style>
-
-
-
-
-
-
-
-
-<!-- <style>
-  .bid {
-    margin-right: 0.25rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 0.25rem;
-    background-color: #f0f0f0;
-    font-family: monospace;
-  }
-  .contract { background-color: #def; }
-  .pass     { background-color: #ffd; }
-  .double   { background-color: #fdd; }
-  .redouble { background-color: #fbb; }
-  .invalid  { background-color: #f88; color: white; }
-</style> -->
