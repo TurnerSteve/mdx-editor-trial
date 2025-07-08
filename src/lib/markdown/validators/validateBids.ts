@@ -30,7 +30,7 @@ export function validateBidsSequence(seq: string[]): BidsValidationResult {
   let lastContractSuitOrder: number | null = null;
 
   // Suit ordering for contract bids
-  const suitOrder: Record<string, number> = { C: 1, D: 2, H: 3, S: 4, NT: 5 };
+  const suitOrder: Record<string, number> = { C: 1, D: 2, H: 3, S: 4, N: 5 };
 
   seq.forEach((bid, i) => {
     if (auctionClosed) {
@@ -66,7 +66,7 @@ export function validateBidsSequence(seq: string[]): BidsValidationResult {
     }
 
     // ⬅️ handle actual contract bids (level + suit)
-    const match = /^([1-7])(C|D|H|S|NT)$/.exec(bid);
+    const match = /^([1-7])(C|D|H|S|N|NT)$/.exec(bid);
     if (!match) {
       errors.push({ index: i, bid, message: 'Invalid contract format.' });
       return;

@@ -8,8 +8,8 @@
 {{bids:MyBids3 seq: 1S P 2H P 3H P 4C P 5H P 6H P P P label:Auction C}}
 
 # Test Hands
-{{hand:hand1 cards:AKQJ.543.9876.2 label:Test}}
-{{hand:hand2 label:TestHand B cards:AKQJ.543.9876.2 }}
-{{hand:hand3 label:TestHand C cards:AKQJ.543.9876.2 }}
+{{hand:hand1 cards:AKQJ.543.9876.2 label:Hand A}}
+{{hand:hand2 label:Hand B cards:AKQJ.543.9876.2 }}
+{{hand:hand3 label:Hand C cards:AKQJ.543.9876.2 }}
 
 ---
