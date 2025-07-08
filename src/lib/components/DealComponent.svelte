@@ -1,67 +1,110 @@
+<!-- File: src/lib/components/DealComponent.svelte -->
 <script lang="ts">
-	import HandView from './HandComponent.svelte';
+  import HandComponent from '$lib/components/HandComponent.svelte';
+  import { validateDeal, type DealError } from '$lib/markdown/validators/validateDeal';
 
-	const props = $props<{
-		hands: Partial<Record<'N' | 'E' | 'S' | 'W', string>>;
-		label?: string;
-	}>();
+  // Destructure incoming props
+  const props = $props<{ N?: string; E?: string; S?: string; W?: string; label?: string }>();
+  const { N, E, S, W, label } = props;
 
-	const directionLabels = {
-		N: 'North',
-		E: 'East',
-		S: 'South',
-		W: 'West'
-	};
+  // Prepare deal validation
+  const result = $derived(() => validateDeal({ N, E, S, W }));
+  const errors = $derived(() => result().errors);
+  let showErrors = $state(false);
 </script>
 
-<div class="deal-grid rounded-xl border-2 border-green-300 bg-white p-4 font-mono text-sm shadow-sm">
-	{#if props.label}
-		<div
-			class="col-span-3 mb-2 rounded-t-md bg-gray-100 py-1 text-center font-semibold text-gray-700"
-		>
-			{props.label}
-		</div>
-	{/if}
+<div class="deal-component">
+  {#if label}
+    <div class="label-row">{label}</div>
+  {/if}
 
-	<!-- North -->
-	<div class="col-start-2 row-start-1 flex flex-col items-center">
-		{#if props.hands.N}
+  <div class="compass-grid">
+    <div class="north"><HandComponent cards={N} label="N" /></div>
+    <div class="west"><HandComponent cards={W} label="W" /></div>
+    <div class="east"><HandComponent cards={E} label="E" /></div>
+    <div class="south"><HandComponent cards={S} label="S" /></div>
+  </div>
 
-			<HandView cards={props.hands.N} label={directionLabels.N} />
-		{/if}
-	</div>
-
-	<!-- West -->
-	<div class="col-start-1 row-start-2 flex flex-col items-end ml-2">
-		{#if props.hands.W}
-			<HandView cards={props.hands.W} label={directionLabels.W} />
-		{/if}
-	</div>
-
-	<!-- East -->
-	<div class="col-start-3 row-start-2 flex flex-col items-start">
-		{#if props.hands.E}
-
-			<HandView cards={props.hands.E} label={directionLabels.E} />
-		{/if}
-	</div>
-
-	<!-- South -->
-	<div class="col-start-2 row-start-3 flex flex-col items-center">
-		{#if props.hands.S}
-			<HandView cards={props.hands.S} label={directionLabels.S} />
-		{/if}
-	</div>
+  {#if !result().isValid}
+    <div class="deal-footer">
+      <button onclick={() => (showErrors = !showErrors)} class="error-toggle">
+        {showErrors ? 'Hide' : 'Show'} deal errors ({errors().length})
+      </button>
+      {#if showErrors}
+        <ul class="error-list">
+          {#each errors() as { hand, index, card, message }}
+            <li>Hand {hand}, card {index + 1}: {card} — {message}</li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style>
-	.deal-grid {
-		display: grid;
-		grid-template-columns: 1fr auto 1fr;
-		grid-template-rows: auto auto auto;
-		gap: 0rem;
-		width: max-content;
-		margin: 0rem;
-    padding: 0rem
-	}
+  .deal-component {
+    display: inline-block;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    overflow: hidden;
+  }
+  .label-row {
+    grid-column: 1 / -1;
+    background: lightgray;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .compass-grid {
+    display: grid;
+    grid-template-areas:
+      ". north ."
+      "west . east"
+      ". south .";
+    grid-template-columns: 6rem 6rem 6rem;
+    grid-template-rows: auto auto auto;
+    /* Fix each row height to reduce overall height */
+    grid-auto-rows: 4rem;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    justify-items: center;
+    align-items: center;
+  }
+  .compass-grid .north { grid-area: north; }
+  .compass-grid .south { grid-area: south; }
+  .compass-grid .west  { grid-area: west; }
+  .compass-grid .east  { grid-area: east; }
+
+  /* Ensure each hand is the same size */
+  .compass-grid :global(.hand-component) {
+    width: 6rem;
+  }
+
+  .deal-footer {
+    background: #f9fafb; /* gray-50 */
+    padding: 0.5rem;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .error-toggle {
+    background: none;
+    border: none;
+    color: #007acc;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.875rem;
+  }
+
+  .error-list {
+    color: #b91c1c;
+    margin-top: 0.25rem;
+    padding-left: 1rem;
+    text-align: left;
+    font-size: 0.875rem;
+  }
 </style>

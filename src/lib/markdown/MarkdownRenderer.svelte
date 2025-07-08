@@ -34,17 +34,15 @@
 		isValid?: boolean;
 		errors?: string[];
 		parsedBids?: ReturnType<typeof parseBidSequence>; // 👈 added
-	
 	};
 
 	const blocks = $derived(() => parseMarkdownTokens(props.markdownText ?? ''));
 
 	const renderedBlocks = $derived(() =>
 		blocks().map((block, index): RenderBlock => {
-
-		// if (block.kind === 'component' && block.type === 'bids') {
-		// 	console.log('Parsed Bids Block:', block);
-		// }
+			// if (block.kind === 'component' && block.type === 'bids') {
+			// 	console.log('Parsed Bids Block:', block);
+			// }
 
 			const key = `block-${block.kind}-${block.line}-${index}`;
 			const Comp =
@@ -83,7 +81,13 @@
 			{/if}
 		{:else if isComponentBlock(block) && block.type === 'deal'}
 			<div spellcheck="false">
-				<DealComponent hands={block.hands ?? {}} label={block.label ?? ''} />
+				<DealComponent
+					N={block.hands?.N || ''}
+					E={block.hands?.E || ''}
+					S={block.hands?.S || ''}
+					W={block.hands?.W || ''}
+					label={block.label || ''}
+				/>
 			</div>
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
@@ -93,8 +97,8 @@
 				</ul>
 			{/if}
 		{:else if isComponentBlock(block) && block.type === 'bids'}
-		    <!-- {@html console.log('Rendering BidsComponent with:', block.seq)} -->
-			<BidsComponent seq={block.seq ?? []} label={block.label ?? ''} />
+			<!-- {@html console.log('Rendering BidsComponent with:', block.seq)} -->
+			<BidsComponent seq={block.seq ?? []} label={block.label ?? ''}/>
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
 					{#each block.errors ?? [] as err}

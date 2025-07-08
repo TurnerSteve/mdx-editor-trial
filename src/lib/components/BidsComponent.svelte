@@ -4,7 +4,7 @@
   import { validateBidsSequence, type BidError } from '$lib/markdown/validators/validateBids';
 
   // Receive raw sequence (string[] or whitespace-delimited string)
-  let { seq: rawSeq } = $props<{ seq: string[] | string }>();
+  let { seq: rawSeq , label: label } = $props<{ seq: string[] | string ; label?: string}>();
 
   // Always work with a true string[]
   const normalizedSeq = $derived(() => normalizeSequence(rawSeq));
@@ -23,6 +23,8 @@
 </script>
 
 <div class="bids-component inline-block rounded-xl border-2 border-blue-300 bg-white font-mono text-sm shadow-sm">
+
+  <div class ="label-row"> {label} </div> 
   <div class="bids-grid">
     {#each normalizedSeq() as bid, i}
       <div class="bid-container">
@@ -79,7 +81,15 @@
     grid-template-columns: repeat(4, minmax(2rem, 1fr));
     gap: 0.25rem;
   }
-
+  /* Label spans both columns in the first row */
+  .label-row {
+    grid-column: 1 / -1;
+    background: lightgray;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
   .bid-container {
     position: relative;
     width: 2rem; /* ⬅️ change: fixed width for uniform boxes */

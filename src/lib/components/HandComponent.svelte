@@ -1,66 +1,120 @@
+<!-- File: src/lib/components/HandComponent.svelte -->
 <script lang="ts">
-  import SuitSymbol from "./SuitSymbol.svelte";
+  import { validateHand, type HandError } from '$lib/markdown/validators/validateHand';
 
-  const props = $props<{ cards: string; label: string }>();
-  const hasCards = $derived(() => !!props.cards?.trim());
+  // Receive raw cards prop (string or array) and optional label
+  const props = $props<{ cards?: string | string[]; label?: string }>();
+  const { cards: rawCards, label } = props;
 
-  // Split cards into suits, ensure 4 suits always
-  let suits = $derived(() => {
-    const parts = (props.cards ?? '').split('.');
-    while (parts.length < 4) parts.push('');
-    return parts;
+  // Map suit letters to symbols
+  const suitSymbols: Record<string, string> = {
+    S: '♠',
+    H: '♥',
+    D: '♦',
+    C: '♣'
+  };
+
+  /**
+   * Derive the raw suit strings (Spades, Hearts, Diamonds, Clubs) from the input.
+   * If fewer than 4 segments are provided, pad with empty strings.
+   */
+  const suitStrings = $derived(() => {
+    const s = Array.isArray(rawCards) ? rawCards.join('') : String(rawCards ?? '');
+    const segments = s.split('.');
+    while (segments.length < 4) segments.push('');
+    return segments.slice(0, 4);
   });
 
-  let spades = $derived(() => suits()[0]);
-  let hearts = $derived(() => suits()[1]);
-  let diamonds = $derived(() => suits()[2]);
-  let clubs = $derived(() => suits()[3]);
+  // Run validation on the raw string
+  const result = $derived(() => validateHand({ hand: rawCards }));
+  const errors = $derived(() => result().errors);
+  const errorMap = $derived(
+    () => new Map<number, string>(errors().map(e => [e.index, e.message]))
+  );
+
+  // Local UI state to toggle visibility of error list
+  let showErrors = $state(false);
 </script>
-<div class="w-32">
-<div class="display: inline-block mr-1 mt-1 w-28 rounded-lg border-2 border-green-300 bg-white shadow mb-2">
-  {#if props.label}
-    <div class="hand-label bg-green-100 rounded-t-lg text-center font-bold">
-      {props.label}
-    </div>
+
+<div class="hand-component inline-block rounded-xl border p-1 bg-white font-mono text-sm shadow-sm">
+  {#if label}
+    <!-- Label inside the bordered component -->
+    <div class="label-row">{label}</div>
   {/if}
 
-  {#if hasCards()}
-    <div class="suit-row text-black">
-      <SuitSymbol value="s" />
-      <div>{spades()}</div>
-    </div>
-    <div class="suit-row text-red-600">
-      <SuitSymbol value="h" />
-      <div>{hearts()}</div>
-    </div>
-    <div class="suit-row text-red-600">
-      <SuitSymbol value="d" />
-      <div>{diamonds()}</div>
-    </div>
-    <div class="suit-row text-black">
-      <SuitSymbol value="c" />
-      <div>{clubs()}</div>
-    </div>
-  {:else}
-    <div class="text-red-600 px-2 pb-2 text-sm font-medium">
-      ⚠️ No cards provided or malformed hand
+  <div class="hand-grid">
+    <!-- Suit rows: symbol in first column, cards string in second column -->
+    {#each ['S','H','D','C'] as suit, i}
+      <div class="suit-symbol">{suitSymbols[suit]}</div>
+      <div class="suit-cards">{suitStrings()[i]}</div>
+    {/each}
+  </div>
+
+  {#if !result().isValid}
+    <div class="hand-footer text-center mt-4">
+      <button onclick={() => (showErrors = !showErrors)} class="error-toggle">
+        {showErrors ? 'Hide' : 'Show'} errors ({errors().length})
+      </button>
+      {#if showErrors}
+        <ul class="error-list mt-2 text-left inline-block">
+          {#each errors() as { index, card, message }}
+            <li>Card {index + 1}: {card} — {message}</li>
+          {/each}
+        </ul>
+      {/if}
     </div>
   {/if}
-</div>
 </div>
 
 <style>
-  .hand-label {
-    padding: 0.5;
+
+  .hand-component {
+    .label-row {
+    grid-column: 1 / -1;
+    background: lightgray;
+    font-weight: 600;
+    text-align: center;
+    padding: 0rem;
+    border-bottom: 1px solid #e5e7eb;
   }
-  .suit-row {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-family: monospace;
-    font-size: 0.875rem;
-    letter-spacing: 0.1em;
-    padding: 0 0.5rem;
   }
 
+  /* Container grid: 2 columns (symbol, cards), 4 suit rows */
+  .hand-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0rem 0.25rem;
+  }
+
+  /* Label row spans both columns */
+  .label-row {
+    grid-column: 1 / -1;
+    background: lightgray;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .suit-symbol {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .hand-footer {
+    margin-top: 1rem;
+  }
+
+  .error-toggle {
+    background: none;
+    border: none;
+    color: #007acc;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .error-list {
+    color: #b91c1c;
+    padding-left: 1rem;
+  }
 </style>
