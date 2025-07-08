@@ -2,12 +2,14 @@
 	import MarkdownRenderer from '$lib/markdown/MarkdownRenderer.svelte';
 	import demoMd from '$lib/tests/demoDealBids.md?raw';
 
+
 	// Runes reactive state for the markdown text input
 	let markdownText = $state(demoMd);
 
 	// No need for extra derived or effects here,
 	// MarkdownRenderer internally parses and renders reactively
 </script>
+
 
 <div class="flex h-screen gap-6 bg-gray-50 p-6">
 	<!-- Markdown Editor (left) -->

@@ -42,13 +42,20 @@
     <div class="label-row">{label}</div>
   {/if}
 
+
+
+
+
   <div class="hand-grid">
-    <!-- Suit rows: symbol in first column, cards string in second column -->
     {#each ['S','H','D','C'] as suit, i}
-      <div class="suit-symbol">{suitSymbols[suit]}</div>
-      <div class="suit-cards">{suitStrings()[i]}</div>
+      <!-- ⬅️ apply red-suit class for hearts & diamonds -->
+      <div class="suit-row" class:red-suit={suit === 'H' || suit === 'D'}>
+        <span class="symbol">{suitSymbols[suit]}</span>
+        <span class="cards">{suitStrings()[i]}</span>
+      </div>
     {/each}
   </div>
+
 
   {#if !result().isValid}
     <div class="hand-footer text-center mt-4">
@@ -67,54 +74,60 @@
 </div>
 
 <style>
-
   .hand-component {
-    .label-row {
-    grid-column: 1 / -1;
-    background: lightgray;
-    font-weight: 600;
-    text-align: center;
-    padding: 0rem;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  }
-
-  /* Container grid: 2 columns (symbol, cards), 4 suit rows */
-  .hand-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0rem 0.25rem;
+    display: inline-block;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--bg-component);
+    box-shadow: var(--shadow-light);
+    color: var(--color-text);
+    padding: 0;
   }
 
-  /* Label row spans both columns */
   .label-row {
     grid-column: 1 / -1;
-    background: lightgray;
     font-weight: 600;
+    height: 2rem;
+    background: var(--bg-header);
     text-align: center;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .hand-grid {
+    display: block;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1rem 1rem 1rem 1rem;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    align-items: center;
   }
 
   .suit-symbol {
     font-size: 1.25rem;
-    text-align: center;
+  }
+
+  /* ⬅️ New styling: color hearts & diamonds red */
+  .red-suit .symbol,
+  .red-suit .cards {
+    color: #dc2626;
   }
 
   .hand-footer {
-    margin-top: 1rem;
+    margin-top: var(--spacing-lg);
+    text-align: center;
   }
 
   .error-toggle {
     background: none;
     border: none;
-    color: #007acc;
+    color: var(--color-accent);
     cursor: pointer;
     text-decoration: underline;
   }
 
   .error-list {
-    color: #b91c1c;
-    padding-left: 1rem;
+    color: var(--color-error);
+    padding-left: var(--spacing-sm);
   }
 </style>

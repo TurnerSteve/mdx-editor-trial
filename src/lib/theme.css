@@ -1,0 +1,38 @@
+/* src/lib/theme.css */
+
+/* Default (light) theme */
+:root {
+  --bg-page:          #ffffff;
+  --bg-component:     #ffffff;
+  --bg-header:        #f3f4f6;
+  --bg-footer:        #f9fafb;
+
+  --color-text:       #111827;
+  --color-border:     #d1d5db;
+  --color-accent:     #007acc;
+  --color-error:      #b91c1c;
+
+  --shadow-light:     0 1px 2px rgba(0, 0, 0, 0.05);
+
+  --spacing-xs:       0.25rem;
+  --spacing-sm:       0.5rem;
+  --spacing-md:       0.75rem;
+  --spacing-lg:       1rem;
+
+  --radius:           0.5rem;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --bg-page:          #1f2937;
+  --bg-component:     #374151;
+  --bg-header:        #4b5563;
+  --bg-footer:        #4b5563;
+
+  --color-text:       #f9fafb;
+  --color-border:     #6b7280;
+  --color-accent:     #3b82f6;
+  --color-error:      #fca5a5;
+
+  --shadow-light:     0 1px 2px rgba(0, 0, 0, 0.25);
+}

@@ -15,14 +15,14 @@
 
 <div class="deal-component">
   {#if label}
-    <div class="label-row">{label}</div>
+    <div class="deal-label">{label}</div>
   {/if}
 
   <div class="compass-grid">
-    <div class="north"><HandComponent cards={N} label="N" /></div>
-    <div class="west"><HandComponent cards={W} label="W" /></div>
-    <div class="east"><HandComponent cards={E} label="E" /></div>
-    <div class="south"><HandComponent cards={S} label="S" /></div>
+    <div class="deal-row north"><HandComponent cards={N} label="N" /></div>
+    <div class="deal-row west"><HandComponent cards={W} label="W" /></div>
+    <div class="deal-row east"><HandComponent cards={E} label="E" /></div>
+    <div class="deal-row south"><HandComponent cards={S} label="S" /></div>
   </div>
 
   {#if !result().isValid}
@@ -44,67 +44,72 @@
 <style>
   .deal-component {
     display: inline-block;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    background: white;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--bg-component);
+    box-shadow: var(--shadow-light);
     overflow: hidden;
+    color: var(--color-text);
   }
-  .label-row {
-    grid-column: 1 / -1;
-    background: lightgray;
-    font-weight: 600;
+
+  .deal-label {
+    background: var(--bg-header);
+    padding: var(--spacing-sm);
     text-align: center;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .compass-grid {
     display: grid;
+    /* 3x3 layout: gutters, positions, with a center cell */
     grid-template-areas:
       ". north ."
-      "west . east"
+      "west center east"
       ". south .";
-    grid-template-columns: 6rem 6rem 6rem;
+    grid-template-columns: 1fr auto 1fr;
     grid-template-rows: auto auto auto;
-    /* Fix each row height to reduce overall height */
-    grid-auto-rows: 4rem;
-    gap: 0.25rem;
-    padding: 0.25rem;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
     justify-items: center;
     align-items: center;
   }
-  .compass-grid .north { grid-area: north; }
-  .compass-grid .south { grid-area: south; }
-  .compass-grid .west  { grid-area: west; }
-  .compass-grid .east  { grid-area: east; }
+  .compass-grid .north  { grid-area: north; }
+  .compass-grid .west   { grid-area: west; }
+  .compass-grid .center { grid-area: center; } /* empty spacer */
+  .compass-grid .east   { grid-area: east; }
+  .compass-grid .south  { grid-area: south; }
 
-  /* Ensure each hand is the same size */
+  /* Force each hand to consistent width */
   .compass-grid :global(.hand-component) {
     width: 6rem;
   }
 
+  :global(.hand-component) {
+    width: 6rem;
+  }
+
   .deal-footer {
-    background: #f9fafb; /* gray-50 */
-    padding: 0.5rem;
+    background: var(--bg-footer);
+    padding: var(--spacing-sm);
     text-align: center;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--color-border);
   }
 
   .error-toggle {
     background: none;
     border: none;
-    color: #007acc;
+    color: var(--color-accent);
     cursor: pointer;
     text-decoration: underline;
-    font-size: 0.875rem;
+    font-size: var(--spacing-md);
   }
 
   .error-list {
-    color: #b91c1c;
-    margin-top: 0.25rem;
-    padding-left: 1rem;
+    color: var(--color-error);
+    margin-top: var(--spacing-xs);
+    padding-left: var(--spacing-sm);
     text-align: left;
-    font-size: 0.875rem;
+    font-size: var(--spacing-md);
   }
 </style>
