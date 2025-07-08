@@ -1,5 +1,11 @@
 <script lang="ts">
-	import type { ParsedBlock, ParsedComponent } from '$lib/types';
+	import type {
+		BidsComponentParams,
+		DealComponentParams,
+		HandComponentParams,
+		ParsedBlock,
+		ParsedComponent
+	} from '$lib/types';
 	import { parseMarkdownTokens } from '$lib/markdown/parseMarkdownTokens';
 	import HandComponent from '$lib/components/HandComponent.svelte';
 	import DealComponent from '$lib/components/DealComponent.svelte';
@@ -43,8 +49,27 @@
 			// if (block.kind === 'component' && block.type === 'bids') {
 			// 	console.log('Parsed Bids Block:', block);
 			// }
-
-			const key = `block-${block.kind}-${block.line}-${index}`;
+			let dynamicPart = '';
+			if (block.kind === 'component') {
+				// HAND
+				if (block.type === 'hand') {
+					const handBlock = block as HandComponentParams;
+					dynamicPart = String(handBlock.cards);
+				}
+				// DEAL
+				else if (block.type === 'deal') {
+					const dealBlock = block as DealComponentParams;
+					dynamicPart = Object.values(dealBlock.hands)
+						.filter((h): h is string => h !== undefined)
+						.join(',');
+				}
+				// BIDS
+				else if (block.type === 'bids') {
+					const bidsBlock = block as BidsComponentParams;
+					dynamicPart = (bidsBlock.seq || []).join(',');
+				}
+			}
+			const key = `block-${block.kind}-${block.line}-${index}-${dynamicPart}`;
 			const Comp =
 				block.kind === 'component' && block.type && componentsMap[block.type as ComponentType]
 					? componentsMap[block.type as ComponentType]
@@ -98,7 +123,7 @@
 			{/if}
 		{:else if isComponentBlock(block) && block.type === 'bids'}
 			<!-- {@html console.log('Rendering BidsComponent with:', block.seq)} -->
-			<BidsComponent seq={block.seq ?? []} label={block.label ?? ''}/>
+			<BidsComponent seq={block.seq ?? []} label={block.label ?? ''} />
 			{#if !block.isValid}
 				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
 					{#each block.errors ?? [] as err}
