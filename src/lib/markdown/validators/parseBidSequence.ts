@@ -1,6 +1,6 @@
 export interface Bid {
   raw: string;
-  type: 'skip' | 'pass' | 'contract' | 'dbl' | 'rdbl' | 'invalid';
+  type: 'skip' | 'pass' | 'contract' | 'dbl' | 'rdbl' | 'invalid' | '?';
   level?: number;
   suit?: 'C' | 'D' | 'H' | 'S' | 'NT';
 }
@@ -13,6 +13,9 @@ export function parseBidSequence(seq: string): Bid[] {
 
     if (raw === '-') {
       return { raw, type: 'skip' };
+    }
+    if (raw === '?') {
+      return { raw, type: '?' };
     }
 
     if (raw === 'P') {
