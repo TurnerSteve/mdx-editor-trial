@@ -110,7 +110,7 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 5ch; /* uniform width */
+		width: 3ch; /* uniform width */
 		height: 2em; /* uniform height */
 		padding: var(--spacing-xs);
 		border: 1px solid var(--color-border);

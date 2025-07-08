@@ -141,4 +141,14 @@
 	.validation-errors {
 		padding-left: 1rem;
 	}
+  /* Ensure component wrappers sit inline and align to top */
+  .markdown-renderer > div {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .validation-errors {
+    color: #b91c1c;
+    padding-left: 1rem;
+  }
 </style>
