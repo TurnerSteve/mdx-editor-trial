@@ -103,10 +103,6 @@
     align-items: center;
   }
 
-  .suit-symbol {
-    font-size: 1.25rem;
-  }
-
   /* ⬅️ New styling: color hearts & diamonds red */
   .red-suit .symbol,
   .red-suit .cards {

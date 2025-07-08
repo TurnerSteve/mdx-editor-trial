@@ -13,6 +13,7 @@
 	import UnknownCommand from '$lib/components/UnknownCommand.svelte';
 	import MarkdownIt from 'markdown-it';
 	import { parseBidSequence } from '$lib/markdown/validators/parseBidSequence';
+	import { validateDeal } from './validators/validateDeal';
 
 	const props = $props<{ markdownText: string }>();
 
@@ -59,25 +60,24 @@
 				// DEAL
 				else if (block.type === 'deal') {
 					const dealBlock = block as DealComponentParams;
-					dynamicPart = Object.values(dealBlock.hands)
-						.filter((h): h is string => h !== undefined)
-						.join(',');
 				}
 				// BIDS
 				else if (block.type === 'bids') {
 					const bidsBlock = block as BidsComponentParams;
 					dynamicPart = (bidsBlock.seq || []).join(',');
 				}
-			} 
-			
-			// Build a base key for all blocks   
-			 
-			const parts = ['block', block.kind, block.line, index, dynamicPart];
-			if (block.kind === 'component') {
-				// Now it's safe to use isValid and errors
-				parts.push(block.isValid ? 'valid' : 'invalid');
-				parts.push(`errs${(block.errors ?? []).length}`);
 			}
+
+			// Build a base key from block kind, position, and raw props
+			const parts = ['block', block.kind, block.line, index, dynamicPart];
+
+			// if (block.kind === 'component' && block.type === 'deal') {
+			// 	// ✂️ CHANGED: run live validation here instead of using parse-time flags
+			// 	const dealBlock = block as DealComponentParams;
+			// 	const liveResult = validateDeal(dealBlock.hands ?? {});
+			// 	parts.push(liveResult.isValid ? 'valid' : 'invalid');
+			// 	parts.push(`errs${liveResult.errors.length}`);
+			// }
 
 			const key = parts.join('-');
 
@@ -125,13 +125,6 @@
 					label={block.label || ''}
 				/>
 			</div>
-			{#if !block.isValid}
-				<ul class="validation-errors mt-1 mb-2 text-sm text-red-600">
-					{#each block.errors ?? [] as err}
-						<li>{err}</li>
-					{/each}
-				</ul>
-			{/if}
 		{:else if isComponentBlock(block) && block.type === 'bids'}
 			<!-- {@html console.log('Rendering BidsComponent with:', block.seq)} -->
 			<BidsComponent seq={block.seq ?? []} label={block.label ?? ''} />
