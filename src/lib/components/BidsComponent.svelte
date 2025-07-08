@@ -113,8 +113,8 @@
 		width: 3ch; /* uniform width */
 		height: 2em; /* uniform height */
 		padding: var(--spacing-xs);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		border: 1px solid gray;
+		border-radius: 4px;
 		text-align: center;
 		cursor: default;
 	}

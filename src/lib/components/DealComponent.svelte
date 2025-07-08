@@ -7,8 +7,16 @@
   const props = $props<{ N?: string; E?: string; S?: string; W?: string; label?: string }>();
   const { N, E, S, W, label } = props;
 
+
+  // ▶️ Compute validation result whenever any hand prop changes
+  const result = $derived(() => validateDeal({
+    N: props.N,
+    E: props.E,
+    S: props.S,
+    W: props.W
+  }));
+
   // Prepare deal validation
-  const result = $derived(() => validateDeal({ N, E, S, W }));
   const errors = $derived(() => result().errors);
   let showErrors = $state(false);
 </script>

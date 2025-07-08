@@ -1,71 +1,82 @@
 // File: src/lib/markdown/validators/validateDeal.ts
 import type { ValidationResult } from './types';
 
-/**
- * Error shape for deal-level validation (across four hands).
- */
 export type DealError = {
-  hand: 'N' | 'E' | 'S' | 'W';  // which hand
-  index: number;                // position of offending card in that hand
-  card: string;                 // card code (e.g. 'AS', '9H')
-  message: string;              // error message
+  hand: string;    // 'N','E','S','W' or 'ALL'
+  index: number;   // position in flattened cards array
+  card: string;    // offending card code
+  message: string; // error description
 };
 
 /**
- * Validate a deal composed of up to 4 hands (N, E, S, W), checking total count and duplicates.
- * @param params Partial mapping from directions to hand strings/arrays
- * @returns ValidationResult<DealError>
+ * Validate a bridge deal composed of up to 4 hands (N,E,S,W). Allows partial deals.
+ * Ensures no duplicate cards across hands and max 52 cards.
  */
 export function validateDeal(
-  params: Record<string, unknown>
+  hands: Partial<Record<'N'|'E'|'S'|'W', string>>
 ): ValidationResult<DealError> {
-  // Pull N/E/S/W directly
-  const raw = params as Partial<Record<'N'|'E'|'S'|'W', unknown>>;
   const errors: DealError[] = [];
 
-  const suitLetters = ['S','H','D','C'] as const;
-
-  // Helper to turn a raw hand into ["AK", "QJ", …] + suit letter
-  function extractCards(rawHand: unknown): string[] {
-    let s = '';
-    if (typeof rawHand === 'string') s = rawHand;
-    else if (Array.isArray(rawHand)) s = rawHand.join(' ');
-    const segments = s.split('.');
-    const cards: string[] = [];
-    segments.forEach((seg, i) => {
-      const tokens = Array.from(seg.matchAll(/(10|[AKQJT2-9x])/g)).map(m => m[1]);
-      tokens.forEach(tok => cards.push(tok + suitLetters[i]));
-    });
-    return cards;
-  }
-
-  // Collect cards
+  // Track seen card codes across all hands
+  const seen = new Map<string, { hand: string; index: number }>();
+  const suitOrder = ['S','H','D','C'] as const;
   const allCards: string[] = [];
-  const perHand: Record<string, string[]> = {};
-  for (const dir of ['N','E','S','W'] as const) {
-    const arr = extractCards(raw[dir]);
-    perHand[dir] = arr;
-    allCards.push(...arr);
-  }
 
-  // Rule: ≤ 52 cards total
-  if (allCards.length > 52) {
-    errors.push({ hand: 'N', index: -1, card: '', message: 'Deal must not exceed 52 cards.' });
-  }
+  // Flatten each hand and detect duplicates
+  for (const hand of ['N','E','S','W'] as const) {
+    const raw = hands[hand] ?? '';
+    const segments = raw.split('.');
+    // pad to 4 segments (voids allowed)
+    while (segments.length < 4) segments.push('');
 
-  // Rule: no duplicates (except wildcards 'x')
-  const seen = new Set<string>();
-  for (const dir of ['N','E','S','W'] as const) {
-    perHand[dir].forEach((card, idx) => {
-      const rank = card.slice(0, -1);
-      if (rank.toLowerCase() === 'x') return;
-      if (seen.has(card)) {
-        errors.push({ hand: dir, index: idx, card, message: 'Duplicate card in deal.' });
-      } else {
-        seen.add(card);
+    // Process each suit segment
+    for (let suitIndex = 0; suitIndex < 4; suitIndex++) {
+      const seg = segments[suitIndex];
+      const tokens = Array.from(seg.matchAll(/(10|[AKQJT2-9x])/g)).map(m => m[1]);
+
+      for (let j = 0; j < tokens.length; j++) {
+        const token = tokens[j];
+        const flatIndex = allCards.length;
+
+        if (token === 'x') {
+          // wildcard, no suit context
+          allCards.push(token);
+          continue;
+        }
+
+        // build full code e.g. 'AS', '10D'
+        const cardCode = token + suitOrder[suitIndex];
+
+        // duplicate across hands?
+        if (seen.has(cardCode)) {
+          const first = seen.get(cardCode)!;
+          errors.push({
+            hand,
+            index: flatIndex,
+            card: cardCode,
+            message: `Duplicate card across deal (also in ${first.hand}).`
+          });
+        } else {
+          seen.set(cardCode, { hand, index: flatIndex });
+        }
+
+        allCards.push(cardCode);
       }
+    }
+  }
+
+  // Rule: total cards <= 52
+  if (allCards.length > 52) {
+    errors.push({
+      hand: 'ALL',
+      index: -1,
+      card: '',
+      message: 'Deal contains more than 52 cards.'
     });
   }
 
-  return { isValid: errors.length === 0, errors };
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 }

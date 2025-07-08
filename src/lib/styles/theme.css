@@ -4,11 +4,11 @@
 :root {
   --bg-page:          #ffffff;
   --bg-component:     #ffffff;
-  --bg-header:        #f3f4f6;
+  --bg-header:        lightgreen;
   --bg-footer:        #f9fafb;
 
-  --color-text:       #111827;
-  --color-border:     #d1d5db;
+  --color-text:       black;
+  --color-border:     lightgreen;
   --color-accent:     #007acc;
   --color-error:      #b91c1c;
 

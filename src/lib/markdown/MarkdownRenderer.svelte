@@ -68,8 +68,19 @@
 					const bidsBlock = block as BidsComponentParams;
 					dynamicPart = (bidsBlock.seq || []).join(',');
 				}
+			} 
+			
+			// Build a base key for all blocks   
+			 
+			const parts = ['block', block.kind, block.line, index, dynamicPart];
+			if (block.kind === 'component') {
+				// Now it's safe to use isValid and errors
+				parts.push(block.isValid ? 'valid' : 'invalid');
+				parts.push(`errs${(block.errors ?? []).length}`);
 			}
-			const key = `block-${block.kind}-${block.line}-${index}-${dynamicPart}`;
+
+			const key = parts.join('-');
+
 			const Comp =
 				block.kind === 'component' && block.type && componentsMap[block.type as ComponentType]
 					? componentsMap[block.type as ComponentType]
@@ -141,14 +152,14 @@
 	.validation-errors {
 		padding-left: 1rem;
 	}
-  /* Ensure component wrappers sit inline and align to top */
-  .markdown-renderer > div {
-    display: inline-block;
-    vertical-align: top;
-  }
+	/* Ensure component wrappers sit inline and align to top */
+	.markdown-renderer > div {
+		display: inline-block;
+		vertical-align: top;
+	}
 
-  .validation-errors {
-    color: #b91c1c;
-    padding-left: 1rem;
-  }
+	.validation-errors {
+		color: #b91c1c;
+		padding-left: 1rem;
+	}
 </style>
