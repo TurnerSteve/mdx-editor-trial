@@ -22,6 +22,7 @@ export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
 
 		const typeStr = m[1];
 		const paramStr = m[2].trim();
+		const rawParams = paramStr;
 		const params = parseParams(paramStr);
 
 		// Only handle known component types
@@ -32,6 +33,7 @@ export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
 				id: params.id || `auto-id-${i}`,
 				label: params.label || '',
 				line: i + 1,
+				rawParams,
 				isValid: false,
 				errors: ['Unknown component type.']
 			} as ParsedComponent);
@@ -54,6 +56,7 @@ export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
 					id,
 					label,
 					line: i + 1,
+					rawParams,
 					isValid: false,
 					errors: validation.errors,
 					cards: params.cards // pass the raw cards string/array
@@ -70,6 +73,7 @@ export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
 					id,
 					label,
 					line: i + 1,
+					rawParams,
 					isValid: false,
 					errors: validation.errors,
 					hands // pass the raw hands mapping
@@ -81,6 +85,7 @@ export function parseMarkdownTokens(markdownText: string): ParsedBlock[] {
 					id,
 					label,
 					line: i + 1,
+					rawParams,
 					isValid: false,
 					errors: validation.errors,
 					seq: params.seq // pass the raw seq array

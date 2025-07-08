@@ -69,7 +69,15 @@
 			}
 
 			// Build a base key from block kind, position, and raw props
-			const parts = ['block', block.kind, block.line, index, dynamicPart];
+			const parts = [
+				'block', 
+				block.kind, 
+				block.line, 
+				index,  
+				(block as ParsedComponent).rawParams, 
+				(block as ParsedComponent).isvalid ? 'valid' : 'invalid',
+				((block as ParsedComponent).errors ?? []).join('|')
+			];
 
 			// if (block.kind === 'component' && block.type === 'deal') {
 			// 	// ✂️ CHANGED: run live validation here instead of using parse-time flags
@@ -101,7 +109,7 @@
 </script>
 
 <div class="markdown-renderer">
-	{#each renderedBlocks() as block (block.key)}
+	{#each renderedBlocks() as block(block.key) }
 		{#if block.kind === 'text'}
 			<p>{@html md.render(block.content)}</p>
 		{:else if isComponentBlock(block) && block.type === 'hand'}

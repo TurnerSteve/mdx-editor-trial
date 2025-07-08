@@ -13,6 +13,7 @@ export interface ParsedComponentBase {
   type: ComponentType;          // ← now restricted to our known components
   label: string;
   line: number;
+  rawParams: string;
   isValid?: boolean;
   errors?: string[];
 }
