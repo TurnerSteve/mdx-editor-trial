@@ -1,29 +1,94 @@
+// src/routes/dialogTest/+page.svelte
 <script lang="ts">
 	import MarkdownRenderer from '$lib/markdown/MarkdownRenderer.svelte';
-	import demoMd from '$lib/tests/demoDealBids.md?raw';
+	import InsertHandDialog from '$lib/components/InsertHandDialog.svelte';
+	// import InsertBidsDialog from '$lib/components/InsertBidsDialog.svelte'; // when you have it
+	// import InsertDealDialog from '$lib/components/InsertDealDialog.svelte'; // when you have it
 
+	let text = $state('');
+	let textarea: HTMLTextAreaElement;
 
-	// Runes reactive state for the markdown text input
-	let markdownText = $state(demoMd);
+	let handDialogOpen = $state(false);
+	// let bidsDialogOpen = $state(false);
+	// let dealDialogOpen = $state(false);
 
-	// No need for extra derived or effects here,
-	// MarkdownRenderer internally parses and renders reactively
+	function insertAtCursor(insertText: string) {
+		if (!textarea) return;
+		console.log('Inserting at cursor', insertText)
+		const start = textarea.selectionStart ?? 0;
+		const end = textarea.selectionEnd ?? 0;
+		const before = text.slice(0, start);
+		const after = text.slice(end);
+		text = before + insertText + after;
+		$: setTimeout(() => {
+			textarea.focus();
+			textarea.setSelectionRange(start + insertText.length, start + insertText.length);
+		});
+	}
+
+	function handleInsertHand(e: CustomEvent<string>) {
+		insertAtCursor(e.detail);
+		handDialogOpen = false;
+	}
+	// Similar for bids, deal
 </script>
 
-
-<div class="flex h-screen gap-6 bg-gray-50 p-6">
-	<!-- Markdown Editor (left) -->
-	<textarea
-		spellcheck="false"
-		bind:value={markdownText}
-		rows="10"
-		class="w-1/2 resize-none rounded-xl border-2 border-gray-300 bg-white p-4 font-mono shadow-sm focus:border-green-600 focus:ring-4 focus:ring-green-400 focus:outline-none"
-	></textarea>
-
-	<!-- Markdown Preview (right) -->
-	<div
-		class="prose w-1/2 max-w-none overflow-auto rounded-xl border-2 border-gray-300 bg-white p-6 shadow-sm"
-	>
-		<MarkdownRenderer {markdownText} />
+<div class="flex flex-col gap-6 md:flex-row">
+	<div class="flex flex-1 flex-col">
+		<!-- INSERT DIALOG BUTTONS ABOVE THE TEXTAREA -->
+		<div class="flex gap-2 mb-2">
+			<button
+				onclick={() => handDialogOpen = true}
+				class="rounded bg-blue-500 px-4 py-1 text-white"
+			>
+				Insert Hand
+			</button>
+			<!--
+			<button
+				onclick={() => bidsDialogOpen = true}
+				class="rounded bg-green-500 px-4 py-1 text-white"
+			>
+				Insert Bids
+			</button>
+			<button
+				onclick={() => dealDialogOpen = true}
+				class="rounded bg-orange-500 px-4 py-1 text-white"
+			>
+				Insert Deal
+			</button>
+			-->
+		</div>
+		<label for="editor-textarea" class="mb-1 font-semibold">Editor</label>
+		<textarea
+			id="editor-textarea"
+			bind:this={textarea}
+			bind:value={text}
+			class="h-48 w-full rounded border p-2 font-mono"
+			placeholder="Type here or use Insert Hand..."
+		></textarea>
+	</div>
+	<div class="flex-1 overflow-auto rounded border bg-white p-4">
+		<h3 class="mb-2 text-lg font-semibold">Markdown Preview</h3>
+		<!-- Use your original MarkdownRenderer exactly as before: -->
+		<MarkdownRenderer markdownText={text} />
 	</div>
 </div>
+
+<!-- Hand dialog -->
+<InsertHandDialog
+	open={handDialogOpen}
+	onClose={() => (handDialogOpen = false)}
+	onAccept={value => insertAtCursor(value)}
+/>
+<!--
+<InsertBidsDialog
+	open={bidsDialogOpen}
+	onClose={() => (bidsDialogOpen = false)}
+	on:insertBids={handleInsertBids}
+/>
+<InsertDealDialog
+	open={dealDialogOpen}
+	onClose={() => (dealDialogOpen = false)}
+	on:insertDeal={handleInsertDeal}
+/>
+-->
