@@ -1,4 +1,4 @@
-// Dialog.svelte
+
 <script lang="ts">
   const props = $props<{ open: boolean; onClose: () => void; onAccept: () => void }>();
 

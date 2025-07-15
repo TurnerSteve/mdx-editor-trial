@@ -5,23 +5,21 @@
 		onAccept: (value: string) => void;
 	}>();
 
-	let S = $state('');
-	let H = $state('');
-	let D = $state('');
-	let C = $state('');
+	let S = $state('Axx');
+	let H = $state('Kxxx');
+	let D = $state('Qxx');
+	let C = $state('Jxx');
 
 	export type $$Events = {
 		insertHand: CustomEvent<string>;
 	};
 
 	function accept() {
-		const markup = `{{hand: S:${S} H:${H} D:${D} C:${C}}}`;
+		const markup = `{{hand:handId label:Hand 1 cards:${S}.${H}.${D}.${C}}}`;
 		props.onAccept(markup);
 		props.onClose();
 	}
 </script>
-
-// src/lib/components/InsertHandDialog.svelte
 
 {#if props.open}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

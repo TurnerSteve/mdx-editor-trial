@@ -1,4 +1,4 @@
-// src/routes/dialogTest/+page.svelte
+<!-- src/routes/dialogTest/+page.svelte -->
 <script lang="ts">
 	import MarkdownRenderer from '$lib/markdown/MarkdownRenderer.svelte';
 	import InsertHandDialog from '$lib/components/InsertHandDialog.svelte';
@@ -58,13 +58,13 @@
 			</button>
 			-->
 		</div>
-		<label for="editor-textarea" class="mb-1 font-semibold">Editor</label>
+		<label for="editor-textarea" class="mb-1 font-semibold">Markdown Window - Edit or insert Hand, Deal or Bidding for assist.</label>
 		<textarea
 			id="editor-textarea"
 			bind:this={textarea}
 			bind:value={text}
 			class="h-48 w-full rounded border p-2 font-mono"
-			placeholder="Type here or use Insert Hand..."
+			placeholder="Type here or use Insert Hand, Deal or Bids for syntax assistance"
 		></textarea>
 	</div>
 	<div class="flex-1 overflow-auto rounded border bg-white p-4">
